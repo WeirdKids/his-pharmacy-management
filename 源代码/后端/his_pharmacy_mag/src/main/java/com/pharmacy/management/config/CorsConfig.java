@@ -7,20 +7,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * @author: 徐奥飞
- * @date: 201年11月4日 下午17:16:39
- * @version 1.0
+ * @author 徐奥飞
+ * @date 2019-11-5 8:30
  */
 @Configuration
-public class CorseConfig {
-
-
+public class CorsConfig {
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedOrigin("*"); //1
+        corsConfiguration.addAllowedHeader("*"); //2
+        corsConfiguration.addAllowedMethod("*"); //3
         return corsConfiguration;
     }
 
@@ -29,6 +25,5 @@ public class CorseConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", buildConfig());
         return new CorsFilter(source);
-
     }
 }

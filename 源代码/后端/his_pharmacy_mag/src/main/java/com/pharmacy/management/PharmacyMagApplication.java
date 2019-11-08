@@ -1,13 +1,11 @@
 package com.pharmacy.management;
-
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
-@EnableCaching
-@SpringBootApplication
-@MapperScan("com.pharmacy.management.dao")
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class PharmacyMagApplication {
 
     public static void main(String[] args) {
