@@ -1,8 +1,11 @@
-<!--作者：徐奥飞
-时间：2019-11-4 14:55-->
+<!--作者：徐奥飞-->
+<!--时间：2019-11-4 10:15-->
 
 <template>
-  <svg :class="svgClass" aria-hidden="true" v-on="$listeners">
+  <svg
+    :class="svgClass"
+    aria-hidden="true"
+    v-on="$listeners">
     <use :xlink:href="iconName"/>
   </svg>
 </template>
@@ -26,7 +29,7 @@ export default {
     },
     svgClass () {
       if (this.className) {
-        return 'svg-icon ' + this.className
+        return 'svg-icon' + this.className
       } else {
         return 'svg-icon'
       }

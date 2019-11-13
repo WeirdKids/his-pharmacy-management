@@ -1,49 +1,50 @@
-<!--
-作者：徐奥飞
-时间：2019-11-4 14:30
-描述：设计登录页面-->
-
+<!--作者：徐奥飞-->
+<!--时间：2019-11-4 8：31-->
+<!--版本：1.0-->
 <template>
   <div>
     <el-card class="login-form-layout">
       <el-form
-        model="loginForm"
+        autocomplete="off"
+        :model="loginForm"
+        :rules="rules"
+        status-icon
         ref="loginForm"
         label-position="left"
       >
         <div style="text-align: center">
-          <svg-icon icon-class="login" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
+          <svg-icon icon-class="platform" style="width: 100px;height: 100px;color: #409eff"></svg-icon>
         </div>
-        <h2 class="login-title color-main">HIS医疗管理系统</h2>
-        <h3 class="login-title color-main">门诊药房工作站</h3>
+        <h2 class="login-title color-main">东软云HIS医疗管理系统</h2>
+        <h3 class="login-title color-main">门诊药房工作站模块</h3>
         <el-form-item prop="username">
           <el-input
             name="username"
             type="text"
             v-model="loginForm.username"
-            auto-complete="true"
+            autocomplete="off"
             placeholder="请输入用户名"
-            >
-            <span slot="prefix">
-              <svg-icon icon-class="user" class="color-main"></svg-icon>
-            </span>
+          >
+          <span slot="prefix">
+            <svg-icon icon-class="username" class="color-main"></svg-icon>
+          </span>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
             name="password"
             :type="pwdType"
-            @keyup.enter.native="handleLogin"
+            @keyup.enter.native="login"
             v-model="loginForm.password"
-            auto-complete="true"
+            autocomplete="off"
             placeholder="请输入密码"
-            >
-            <span slot="prefix">
-              <svg-icon icon-class="password" class="color-main"></svg-icon>
-            </span>
+          >
+          <span slot="prefix">
+            <svg-icon icon-class="password" class="color-main"></svg-icon>
+          </span>
             <span slot="suffix" @click="showPwd">
-              <svg-icon icon-class="eye" class="color-main"></svg-icon>
-            </span>
+            <svg-icon icon-class="eye"></svg-icon>
+          </span>
           </el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px">
@@ -51,8 +52,8 @@
             style="width: 100%"
             type="primary"
             :loading="loading"
-            @click.native.prevent="handleLogin"
-            >登录</el-button>
+            @click.native.prevent="login"
+          >登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -61,12 +62,36 @@
 
 <script>
 export default {
-  name: 'login',
+  name: 'Login',
   data () {
+    const checkUsername = (rule, value, callback) => {
+      if (value === '') {
+        return callback(new Error('请输入用户名'))
+      } else {
+        callback()
+      }
+    }
+    const checkPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else if (value.length < 3) {
+        callback(new Error('密码不能少于3位'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         username: '',
         password: ''
+      },
+      rules: {
+        username: [
+          { validator: checkUsername, trigger: 'blur' }
+        ],
+        password: [
+          { validator: checkPassword, trigger: 'blur' }
+        ]
       },
       loading: false,
       pwdType: 'password'
@@ -80,31 +105,34 @@ export default {
         this.pwdType = 'password'
       }
     },
-    handleLogin () {
-      this.$refs.loginForm.validate(valid => {
+    login () {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$store
-            .dispatch('Login', this.loginForm)
-            .then(response => {
+          this.$axios
+            .post('/login', {
+              username: this.loginForm.username,
+              password: this.loginForm.password
+            })
+            .then(successResponse => {
               this.loading = false
-              let code = response.data.code
-              if (code === 200) {
-                this.$router.push({
-                  path: '/success',
-                  query: {data: response.data.data}
-                })
+              if (successResponse.data.code === 200) {
+                this.$router.push('/index')
               } else {
-                this.$router.push({
-                  path: '/error',
-                  query: {message: response.data.message}
+                this.$alert(successResponse.data.message, '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.$refs.loginForm.resetFields()
+                    this.pwdType = 'password'
+                  }
                 })
               }
             })
-            .catch(() => {
+            .catch(failResponse => {
               this.loading = false
             })
         } else {
+          // eslint-disable-next-line no-console
           console.log('参数验证不合法！')
           return false
         }
@@ -114,14 +142,21 @@ export default {
 }
 </script>
 
+<style>
+  body{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: white;
+  }
+</style>
 <style scoped>
   .login-form-layout {
     position: absolute;
     left: 0;
     right: 0;
     width: 360px;
-    margin: 140px auto;
-    border-top: 10px solid #409eff;
+    margin: 10px auto;
   }
 
   .login-title {
@@ -129,6 +164,6 @@ export default {
   }
 
   .color-main {
-    color: #409EFF;
+    color: #409eff;
   }
 </style>

@@ -1,7 +1,7 @@
 {
   "name": "his_pharmacy_mag",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "东软云HIS医疗管理系统之门诊药房工作站模块",
   "author": "WiredKid <18742585882@163.com>",
   "private": true,
   "scripts": {
@@ -16,10 +16,8 @@
   "dependencies": {
     "axios": "^0.19.0",
     "element-ui": "^2.12.0",
-    "qs": "^6.9.1",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.1.1"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
