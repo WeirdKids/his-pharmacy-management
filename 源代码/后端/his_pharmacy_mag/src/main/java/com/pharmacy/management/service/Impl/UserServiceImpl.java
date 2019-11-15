@@ -17,12 +17,17 @@ public class UserServiceImpl implements UserService {
     UserDao userDao;
 
     @Override
-    public User getByName(String username) {
+    public User getByUserName(String username) {
         return userDao.findByUsername(username);
     }
 
     @Override
     public User get(String username, String password) {
-        return userDao.findByUsernameAndPassword(username, password);
+        return userDao.getByUsernameAndPassword(username, password);
+    }
+
+    @Override
+    public void updateState(int id, String state) {
+        userDao.updateStateById(id, state);
     }
 }

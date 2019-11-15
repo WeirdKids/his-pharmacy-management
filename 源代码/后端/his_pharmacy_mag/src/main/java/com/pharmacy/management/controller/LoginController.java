@@ -21,8 +21,8 @@ public class LoginController {
 
     @Autowired
     UserService userService;
-
-    @CrossOrigin // 解决跨域问题
+    // 解决跨域问题
+    @CrossOrigin
     @PostMapping(value = "/api/login")
     @ResponseBody
     public LoginResult login(@RequestBody User requestUser) {
@@ -30,15 +30,19 @@ public class LoginController {
         String username = requestUser.getUsername();
         username = HtmlUtils.htmlEscape(username);
 
-        User user = userService.getByName(username);
+        User user = userService.getByUserName(username);
         if (user == null) {
-            return new LoginResult(400, "此用户名不存在！");
+            return new LoginResult(400, "此用户名不存在！", "", null);
         } else if (user.getPassword().equals(requestUser.getPassword())) {
-            return new LoginResult(200);
+            if (user.getState().equals("未登录")) {
+                userService.updateState(user.getId(), "已登录");
+                return new LoginResult(200, "登录成功！", "已登录", user);
+            } else {
+                return new LoginResult(400, "此用户已登录！", "", null);
+            }
         } else {
-            return new LoginResult(400, "密码错误！");
+            return new LoginResult(400, "密码错误！", "", null);
         }
     }
-
 }
 
