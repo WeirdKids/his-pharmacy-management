@@ -8,6 +8,7 @@ import com.pharmacy.management.bean.User;
  */
 
 public interface UserService {
-    public User getByName(String username);
+    public User getByUserName(String username);
     public User get(String username, String password);
+    public void updateState(int id, String state);
 }

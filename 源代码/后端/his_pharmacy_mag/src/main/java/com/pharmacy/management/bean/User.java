@@ -28,7 +28,16 @@ public class User {
     int id;
 
     String username;
+
     String password;
+    // @Column(name = "realName")这样写访问数据库时会出错！(数据库的字段，数据库不区分大小写，这个要注意)
+    // hibernate会按照驼峰命名规范将 realName 转成 real_name，相当于数据库中 realName 等于实体类中的 real_name (hibernate自动帮我们转换)
+    // 所以，要按照下面这样写，访问数据库才能顺利进行
+    @Column(name = "realname")
+    String realName;
+
+    // 账户当前状态（未登录 || 已登录）
+    String state;
 
     public int getId() {
         return id;
@@ -52,6 +61,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
 }
