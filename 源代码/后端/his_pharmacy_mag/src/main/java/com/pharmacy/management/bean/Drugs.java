@@ -1,7 +1,7 @@
 package com.pharmacy.management.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import java.util.Date;
 import javax.persistence.*;
 
 @Entity
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer"})
 
 public class Drugs {
-    @id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     int id;
@@ -35,7 +35,7 @@ public class Drugs {
     int drugsDosageID;
 
     @Column(name = "drugstypeid")
-    int durgsTypeID;
+    int drugsTypeID;
 //单价
     @Column(name = "drugsprice")
     float drugsPrice;
@@ -44,7 +44,7 @@ public class Drugs {
     String mnemonicCode;
 //创建日期
     @Column(name = "creationdate")
-    date creationDate;
+    Date creationDate;
 //数量
     @Column(name = "num")
     int num;
@@ -62,76 +62,76 @@ public class Drugs {
         this.id = id;
     }
 
-    public void getDrugsCode() {
+    public String getDrugsCode() {
         return drugsCode;
     }
     public void setDrugsCode(String drugsName) {
         this.drugsCode = drugsCode;
     }
 
-    public void getDrugsName() {
+    public String getDrugsName() {
         return drugsName;
     }
     public void setDrugsName(String drugsName) { this.drugsName = drugsName; }
 
-    public void getDrugsFormat() { return drugsFormat; }
+    public String getDrugsFormat() { return drugsFormat; }
     public void setDrugsFormat(String drugsFormat) {
         this.drugsFormat = drugsFormat;
     }
 
-    public void getManufacturer() {
+    public String getManufacturer() {
         return manufacturer;
     }
     public void setManufacturer(String manufacturer) { this.manufacturer = manufacturer; }
 
-    public void getDrugsPrice() { return drugsPrice; }
+    public float getDrugsPrice() { return drugsPrice; }
     public void setDrugsPrice(float drugsPrice) {
         this.drugsPrice = drugsPrice;
     }
 
-    public void getMnemonicCode() {
+    public String getMnemonicCode() {
         return mnemonicCode;
     }
     public void setMnemonicCode(String mnemonicCode) {
         this.mnemonicCode = mnemonicCode;
     }
 
-    public void getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
-    public void setCreationDate(date creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
-    public void getNum() {
+    public int getNum() {
         return num;
     }
     public void setNum(int num) {
         this.num = num;
     }
 
-    public void getSaveRequire() {
+    public String getSaveRequire() {
         return saveRequire;
     }
     public void setSaveRequire(String saveRequire) {
         this.saveRequire = saveRequire;
     }
 
-    public void getCategory() {
+    public String getCategory() {
         return category;
     }
     public void setCategory(String category) {
         this.category = category;
     }
 
-    public void getDrugsDosageID() {
+    public int getDrugsDosageID() {
         return drugsDosageID;
     }
     public void setDrugsDosageID(int drugsDosageID) {
         this.drugsDosageID = drugsDosageID;
     }
 
-    public void getDrugsTypeID() {
+    public int getDrugsTypeID() {
         return drugsTypeID;
     }
     public void setDrugsTypeID(int drugsTypeID) {
