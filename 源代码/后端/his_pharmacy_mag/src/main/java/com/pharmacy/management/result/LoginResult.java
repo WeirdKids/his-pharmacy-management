@@ -14,7 +14,7 @@ public class LoginResult {
     private String message;
     // 反馈用户状态
     private String state;
-    //反馈对象
+    // 反馈对象
     private User user;
 
     public LoginResult(int code, String message, String state,User user) {

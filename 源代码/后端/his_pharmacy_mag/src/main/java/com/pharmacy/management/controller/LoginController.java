@@ -34,12 +34,7 @@ public class LoginController {
         if (user == null) {
             return new LoginResult(400, "此用户名不存在！", "", null);
         } else if (user.getPassword().equals(requestUser.getPassword())) {
-            if (user.getState().equals("未登录")) {
-                userService.updateState(user.getId(), "已登录");
-                return new LoginResult(200, "登录成功！", "已登录", user);
-            } else {
-                return new LoginResult(400, "此用户已登录！", "", null);
-            }
+            return new LoginResult(200, "登陆成功!", "", user);
         } else {
             return new LoginResult(400, "密码错误！", "", null);
         }

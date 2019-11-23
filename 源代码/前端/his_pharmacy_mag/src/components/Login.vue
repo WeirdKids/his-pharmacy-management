@@ -142,6 +142,7 @@ export default {
             })
             .catch(failResponse => {
               this.loading = false
+              this.$message.error('服务器表示不想理你！')
             })
         } else {
           // eslint-disable-next-line no-console

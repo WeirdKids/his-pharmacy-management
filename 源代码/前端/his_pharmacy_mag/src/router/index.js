@@ -40,16 +40,10 @@ export default new Router({
     {
       path: '/home',
       name: '主页',
-      component: Home
-      // requireAuth: true,
-    },
-    {
-      // 查询统计项
-      path: '/query',
-      name: '查询统计',
       component: Home,
-      // requireAuth: true,
-      // 之后再添加新的页面，可以直接在 children 中增添对应的内容
+      // meta: {
+      //   requireAuth: true
+      // }
       children: [
         {
           path: '/query/prescription_query',
@@ -71,16 +65,7 @@ export default new Router({
             keepAlive: false,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      // 门诊配药发药项
-      path: '/outpatient',
-      name: '门诊配药发药',
-      component: Home,
-      // requireAuth: true,
-      children: [
+        },
         {
           path: '/outpatient/peiYao',
           name: '药房配药',
@@ -100,16 +85,7 @@ export default new Router({
             keepAlive: false,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      // 库存管理
-      path: '/repertory',
-      name: '库存管理',
-      component: Home,
-      // requireAuth: true,
-      children: [
+        },
         {
           path: '/repertory/manage',
           name: '库存管理',
@@ -139,16 +115,7 @@ export default new Router({
             keepAlive: false,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      // 门诊业务
-      path: '/yeWu',
-      name: '门诊业务',
-      component: Home,
-      // requireAuth: true,
-      children: [
+        },
         {
           path: '/yewu/prescription_query',
           name: '查询复方单',
@@ -178,15 +145,7 @@ export default new Router({
             keepAlive: false,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      path: '/catalog',
-      name: '目录管理',
-      component: Home,
-      // requireAuth: true,
-      children: [
+        },
         {
           path: '/catalog/manage',
           name: '目录管理',
