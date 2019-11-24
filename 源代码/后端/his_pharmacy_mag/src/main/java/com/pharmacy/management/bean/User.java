@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 
 @Entity // @Entity 表示这是一个实体类
-@Table(name = "users") // @Table(name=“user”) 表示对应的表名是 user
+@Table(name = "users") // @Table(name=“users”) 表示对应的表名是 users
 // 因为是做前后端分离，而前后端数据交互用的是 json 格式
 // 那么 User 对象就会被转换为 json 数据
 // 而本项目使用 jpa 来做实体类的持久化，jpa 默认会使用 hibernate

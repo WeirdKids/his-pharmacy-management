@@ -40,14 +40,10 @@ export default new Router({
     {
       path: '/home',
       name: '主页',
-      component: Home
-    },
-    {
-      // 查询统计项
-      path: '/query',
-      name: '查询统计',
       component: Home,
-      // 之后再添加新的页面，可以直接在 children 中增添对应的内容
+      meta: {
+        requireAuth: true
+      },
       children: [
         {
           path: '/query/prescription_query',
@@ -56,7 +52,7 @@ export default new Router({
           meta: {
             // 在需要拦截的路由中加入一条元数据，设置一个 requireAuth 字段
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -66,25 +62,17 @@ export default new Router({
           component: DrugsQuery,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      // 门诊配药发药项
-      path: '/outpatient',
-      name: '门诊配药发药',
-      component: Home,
-      children: [
+        },
         {
           path: '/outpatient/peiYao',
           name: '药房配药',
           component: PeiYao,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -94,25 +82,17 @@ export default new Router({
           component: FaYao,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      // 库存管理
-      path: '/repertory',
-      name: '库存管理',
-      component: Home,
-      children: [
+        },
         {
           path: '/repertory/manage',
           name: '库存管理',
           component: RepertoryMag,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -122,7 +102,7 @@ export default new Router({
           component: Stockout,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -132,25 +112,17 @@ export default new Router({
           component: Stock,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      // 门诊业务
-      path: '/yeWu',
-      name: '门诊业务',
-      component: Home,
-      children: [
+        },
         {
           path: '/yewu/prescription_query',
           name: '查询复方单',
           component: PresQuery,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -160,7 +132,7 @@ export default new Router({
           component: tuiYao,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -170,24 +142,17 @@ export default new Router({
           component: tuiChuFang,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
-        }
-      ]
-    },
-    {
-      path: '/catalog',
-      name: '目录管理',
-      component: Home,
-      children: [
+        },
         {
           path: '/catalog/manage',
           name: '目录管理',
           component: catalogMag,
           meta: {
             requireAuth: true,
-            keepAlive: false,
+            keepAlive: true,
             hidden: true
           }
         }

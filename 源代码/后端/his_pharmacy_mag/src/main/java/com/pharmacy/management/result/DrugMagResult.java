@@ -1,31 +1,31 @@
 package com.pharmacy.management.result;
 
-import com.pharmacy.management.bean.User;
+import com.pharmacy.management.bean.Drug;
+
+import java.util.List;
 
 /**
  * @author 徐奥飞
- * @date 2019-11-5 8:30
+ * @date 2019-11-8 8:30
  */
-public class LoginResult {
+
+public class DrugMagResult {
 
     // 响应码
     private int code;
     // 反馈信息
     private String message;
-    // 反馈用户状态
-    private String state;
     // 反馈对象
-    private User user;
+    private List<Drug> drugs;
 
-    public LoginResult(int code, String message, String state,User user) {
+    public DrugMagResult(int code) {
         this.code = code;
-        this.message = message;
-        this.state = state;
-        this.user = user;
     }
 
-    public LoginResult(int code) {
+    public DrugMagResult(int code, String message, List<Drug> drugs) {
         this.code = code;
+        this.message = message;
+        this.drugs = drugs;
     }
 
     public int getCode() {
@@ -44,12 +44,11 @@ public class LoginResult {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
+    public List<Drug> getDrugs() {
+        return drugs;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setDrugs(List<Drug> drugs) {
+        this.drugs = drugs;
     }
-
 }
