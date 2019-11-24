@@ -17,18 +17,15 @@ public class DrugMagResult {
     private String message;
     // 反馈对象
     private List<Drug> drugs;
-    // 反馈数据量
-    private int num;
 
     public DrugMagResult(int code) {
         this.code = code;
     }
 
-    public DrugMagResult(int code, String message, List<Drug> drugs, int num) {
+    public DrugMagResult(int code, String message, List<Drug> drugs) {
         this.code = code;
         this.message = message;
         this.drugs = drugs;
-        this.num = num;
     }
 
     public int getCode() {
@@ -53,13 +50,5 @@ public class DrugMagResult {
 
     public void setDrugs(List<Drug> drugs) {
         this.drugs = drugs;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
     }
 }

@@ -29,11 +29,6 @@ public class DrugMagController {
     public DrugMagResult queryAll () {
         List<Drug> drugs = new ArrayList<>();
         drugs = drugService.getAll();
-        int num = drugService.getNum();
-        if (num == 0) {
-            return new DrugMagResult(400, "数据库中没有数据", null, 0);
-        } else {
-            return new DrugMagResult(200, "执行成功！", drugs, num);
-        }
+        return new DrugMagResult(200, "执行成功！", drugs);
     }
 }

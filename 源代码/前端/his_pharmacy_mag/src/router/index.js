@@ -41,9 +41,9 @@ export default new Router({
       path: '/home',
       name: '主页',
       component: Home,
-      // meta: {
-      //   requireAuth: true
-      // }
+      meta: {
+        requireAuth: true
+      },
       children: [
         {
           path: '/query/prescription_query',
@@ -51,8 +51,8 @@ export default new Router({
           component: PresQuery,
           meta: {
             // 在需要拦截的路由中加入一条元数据，设置一个 requireAuth 字段
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -61,8 +61,8 @@ export default new Router({
           name: '药品信息查询',
           component: DrugsQuery,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -71,8 +71,8 @@ export default new Router({
           name: '药房配药',
           component: PeiYao,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -81,8 +81,8 @@ export default new Router({
           name: '药房发药',
           component: FaYao,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -91,8 +91,8 @@ export default new Router({
           name: '库存管理',
           component: RepertoryMag,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -101,8 +101,8 @@ export default new Router({
           name: '缺货信息',
           component: Stockout,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -111,8 +111,8 @@ export default new Router({
           name: '进货信息',
           component: Stock,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -121,8 +121,8 @@ export default new Router({
           name: '查询复方单',
           component: PresQuery,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -131,8 +131,8 @@ export default new Router({
           name: '药品退回审核',
           component: tuiYao,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -141,8 +141,8 @@ export default new Router({
           name: '退回处方信息',
           component: tuiChuFang,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         },
@@ -151,8 +151,8 @@ export default new Router({
           name: '目录管理',
           component: catalogMag,
           meta: {
-            // requireAuth: true,
-            keepAlive: false,
+            requireAuth: true,
+            keepAlive: true,
             hidden: true
           }
         }
