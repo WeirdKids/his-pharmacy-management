@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row style="margin-top: -15px">
+    <el-row style="margin-top: -15px;">
       <el-button
         style="margin-right: 100%"
         type="primary"
@@ -18,6 +18,7 @@
         tooltip-effect="dark"
         max-height="500"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px"
+        row-style="height: 90px"
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection" fixed>
