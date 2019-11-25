@@ -1,6 +1,6 @@
 package com.pharmacy.management.service;
 
-import com.pharmacy.management.bean.Drug;
+import com.pharmacy.management.bean.Warehouse;
 
 import java.util.List;
 
@@ -9,6 +9,6 @@ import java.util.List;
  * date 2019-11-12 8:10
  */
 
-public interface DrugService {
-    public List<Drug> getAll();
+public interface WarehouseService {
+    public List<Warehouse> getAll();
 }

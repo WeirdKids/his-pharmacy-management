@@ -10,18 +10,22 @@ const state = {
     username: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')).username,
     realName: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')).realName
   },
-  drugs: {
+  repertories: {
     // id: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).id,
-    drugsCode: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsCode,
-    drugsName: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsName,
-    drugsFormat: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsFormat,
-    drugsUnit: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsUnit,
-    drugsDosageID: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsDosageID,
-    drugsTypeID: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsTypeID,
-    drugsPrice: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsPrice,
-    mnemonicCode: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).mnemonicCode,
-    num: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).num,
-    saveRequire: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).saveRequire
+    drugsCode: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).drugsCode,
+    drugsName: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).drugsName,
+    drugsFormat: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).drugsFormat,
+    drugsUnit: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).drugsUnit,
+    drugsDosageID: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).drugsDosageID,
+    drugsTypeID: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).drugsTypeID,
+    drugsPrice: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).drugsPrice,
+    mnemonicCode: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).mnemonicCode,
+    totalNum: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).totalNum,
+    saveRequire: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).saveRequire,
+    num: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).num,
+    warehouse: window.sessionStorage.getItem('repertories' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).warehouse,
+    currentPage: window.sessionStorage.getItem('repertories' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).currentPage,
+    pageSize: window.sessionStorage.getItem('repertories' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('repertories' || '[]')).pageSize
   }
 }
 

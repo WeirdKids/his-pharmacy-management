@@ -4,15 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 
-/**
- * @author 徐奥飞
- * @date 2019-11-8 7:50
- */
 @Entity // @Entity 表示这是一个实体类
-@Table(name = "drugs") // @Table(name=“drugs”) 表示对应的表名是 drugs
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer"})
-public class Drug {
-
+public class Repertory {
     @Id
     // @GeneratedValue 用于标注主键的生成策略，通过strategy 属性指定
     // IDENTITY：采用数据库ID自增长的方式来自增主键字段
@@ -49,6 +43,10 @@ public class Drug {
 
     @Column(name = "saverequire")
     String saveRequire;
+
+    int num;
+
+    String warehouse;
 
     public int getId() {
         return id;
@@ -136,5 +134,21 @@ public class Drug {
 
     public void setSaveRequire(String saveRequire) {
         this.saveRequire = saveRequire;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public String getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(String warehouse) {
+        this.warehouse = warehouse;
     }
 }

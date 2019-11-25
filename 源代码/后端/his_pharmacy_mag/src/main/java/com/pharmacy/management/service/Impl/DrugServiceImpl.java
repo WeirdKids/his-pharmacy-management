@@ -8,23 +8,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author 徐奥飞
+ * date 2019-11-12 8:15
+ */
+
 @Service
 public class DrugServiceImpl implements DrugService {
     @Autowired
     DrugDao drugDao;
 
     @Override
-    public List<Drug> getByMnemonicCode(String MnemonicCode) {
-        return drugDao.findAllByMnemonicCode(MnemonicCode);
-    }
-
-    @Override
     public List<Drug> getAll() {
         return drugDao.returnAll();
-    }
-
-    @Override
-    public int getNum() {
-        return drugDao.returnNum();
     }
 }

@@ -66,7 +66,7 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="drugsNum"
+          prop="num"
           label="数量"
           width="130px"
           align="center">
@@ -128,11 +128,6 @@ export default {
       multipleSelection: []
     }
   },
-  created () {
-    // if (sessionStorage.getItem('state')) {
-    //   this.$store.replaceState(JSON.parse(sessionStorage.getItem('state')))
-    // }
-  },
   methods: {
     toggleSelection (rows) {
       if (rows) {
@@ -149,9 +144,9 @@ export default {
       this.$axios.post('/repertory/manage/queryAll')
         .then(res => {
           this.loading = false
-          _this.$store.commit('queryAll', res.data.drugs)
-          allData = res.data.drugs
-          _this.tableData = res.data.drugs
+          _this.$store.commit('queryAll', res.data.repertories)
+          allData = res.data.repertories
+          _this.tableData = res.data.repertories
           _this.total = this.tableData.length
           this.tableChange()
         })
@@ -167,7 +162,7 @@ export default {
     handleSizeChange (val) {
       this.pageSize = val
       // this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pagesize)
-      this.currentPage = 1
+      // this.currentPage = 1
       this.tableChange()
       // console.log(`每页 ${val} 条`)
     },
@@ -186,6 +181,19 @@ export default {
     },
     handleDelete (index, row) {
       console.log(index, row)
+    }
+  },
+  computed: {
+    repertories () {
+      return this.$store.state.repertories
+    }
+  },
+  created () {
+    if (sessionStorage.getItem('repertories')) {
+      allData = this.$store.state.repertories
+      this.tableData = this.$store.state.repertories
+      this.total = this.tableData.length
+      this.tableChange()
     }
   }
   // activated () {

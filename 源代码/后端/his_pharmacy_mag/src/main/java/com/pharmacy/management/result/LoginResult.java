@@ -4,7 +4,7 @@ import com.pharmacy.management.bean.User;
 
 /**
  * @author 徐奥飞
- * @date 2019-11-5 8:30
+ * date 2019-11-5 8:30
  */
 public class LoginResult {
 
