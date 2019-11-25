@@ -15,10 +15,10 @@
       <el-table
         ref="multipleTable"
         :data="tableData"
+        :row-style="{height: 90 + 'px'}"
         tooltip-effect="dark"
-        max-height="500"
-        style="width: 100%; margin-bottom: 10px; margin-top: 5px"
-        row-style="height: 90px"
+        height="520"
+        style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection" fixed>
@@ -26,54 +26,64 @@
         <el-table-column
           prop="drugsCode"
           label="药品编码"
-          width="130px">
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="drugsName"
-          label="药品名称"
-          width="130px">
+          label="名称"
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="drugsFormat"
-          label="药品规格"
-          width="100%">
+          label="规格"
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="drugsUnit"
-          label="药品单位"
-          width="100%">
+          label="单位"
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="drugsPrice"
-          label="药品单价"
-          width="100%">
+          label="单价"
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="drugsDosageID"
-          label="药品剂型"
-          width="100%">
+          label="剂型"
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="drugsTypeID"
-          label="药品类型"
-          width="100%">
+          label="类型"
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="drugsNum"
-          label="药品数量"
-          width="100%">
+          label="数量"
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="saveRequire"
           label="保存条件"
-          width="100%">
+          width="130px"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="warehouse"
           label="存放位置"
-          width="100%">
+          width="130px"
+          align="center">
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="150">
+        <el-table-column label="操作" fixed="right" width="150" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -117,6 +127,11 @@ export default {
       tableData: [],
       multipleSelection: []
     }
+  },
+  created () {
+    // if (sessionStorage.getItem('state')) {
+    //   this.$store.replaceState(JSON.parse(sessionStorage.getItem('state')))
+    // }
   },
   methods: {
     toggleSelection (rows) {
@@ -178,5 +193,5 @@ export default {
   // }
 }
 </script>
-<style scoped>
+<style>
 </style>
