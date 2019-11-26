@@ -109,7 +109,7 @@ export default {
     },
     login () {
       var _this = this
-      console.log(this.$store.state)
+      // console.log(this.$store.state)
       this.$refs.loginForm.validate((valid) => {
         // 验证参数是否合法
         if (valid) { // 合法

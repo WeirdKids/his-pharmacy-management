@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -38,6 +39,31 @@ public class ReperstoryController {
         drugs = drugService.getAll();
         warehouses = warehouseService.getAll();
         List<Repertory> repertories = new ArrayList<>();
+        repertories = getRepertories(drugs, warehouses);
+        return new RepertoryResult(200, "查询成功！", repertories);
+    }
+
+    // 解决跨域问题
+    @CrossOrigin
+    @PostMapping(value = "/api/repertory/manage/query")
+    @ResponseBody
+    public RepertoryResult query(@RequestBody Drug requestDrug) {
+        String mnemonicCode = requestDrug.getMnemonicCode();
+        List<Drug> drugs = new ArrayList<>();
+        List<Warehouse> warehouses = new ArrayList<>();
+        drugs = drugService.getByMnemonicCode(mnemonicCode);
+        if (drugs.size() == 0) {
+            return new RepertoryResult(400, "该药品助记码没有匹配的数据！", null);
+        } else {
+            warehouses = warehouseService.getByMnemonicCode(mnemonicCode);
+            List<Repertory> repertories = new ArrayList<>();
+            repertories = getRepertories(drugs, warehouses);
+            return new RepertoryResult(200, "操作执行成功！", repertories);
+        }
+    }
+
+    private List<Repertory> getRepertories(List<Drug> drugs, List<Warehouse> warehouses) {
+        List<Repertory> repertories = new ArrayList<>();
         for (int i = 0; i < warehouses.size(); i ++) {
             Repertory repertory = new Repertory();
             repertory.setId(warehouses.get(i).getId());
@@ -55,7 +81,6 @@ public class ReperstoryController {
             repertory.setDrugsCode(drugs.get(i).getDrugsCode());
             repertories.add(i, repertory);
         }
-
-        return new RepertoryResult(200, "查询成功！", repertories);
+        return repertories;
     }
 }

@@ -23,6 +23,9 @@ public class Warehouse {
 
     String warehouse;
 
+    @Column(name = "mnemoniccode")
+    String mnemonicCode;
+
     public int getId() {
         return id;
     }
@@ -45,5 +48,13 @@ public class Warehouse {
 
     public void setWarehouse(String warehouse) {
         this.warehouse = warehouse;
+    }
+
+    public String getMnemonicCode() {
+        return mnemonicCode;
+    }
+
+    public void setMnemonicCode(String mnemonicCode) {
+        this.mnemonicCode = mnemonicCode;
     }
 }

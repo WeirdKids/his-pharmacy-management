@@ -11,4 +11,5 @@ import java.util.List;
 
 public interface WarehouseService {
     public List<Warehouse> getAll();
+    public List<Warehouse> getByMnemonicCode(String mnemonicCode);
 }

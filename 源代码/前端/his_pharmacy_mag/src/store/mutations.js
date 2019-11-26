@@ -12,7 +12,7 @@ const mutations = {
     window.sessionStorage.removeItem('user')
     window.sessionStorage.removeItem('drugs')
   },
-  queryAll (state, data) {
+  repertory (state, data) {
     state.repertories = data
     window.sessionStorage.setItem('repertories', JSON.stringify(data))
   }

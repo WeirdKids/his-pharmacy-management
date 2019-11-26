@@ -1,16 +1,48 @@
 <template>
   <div>
-    <el-row style="margin-top: -15px;">
-      <el-button
-        style="margin-right: 100%"
-        type="primary"
-        size="mini"
-        round
-        :loading="loading"
-        icon="el-icon-search"
-        @click.native.prevent="queryAll">显示全部药品信息
-      </el-button>
-    </el-row>
+    <el-form
+      :inline="true"
+      :model="formInline"
+      :rules="rules"
+      status-icon
+      style="margin-top: -15px; height: 35px;"
+      ref="formInline"
+      size="mini">
+      <el-row>
+        <el-col :span="1">
+          <el-form-item prop="mnemonicCode" style="position: absolute;">
+            <el-input
+              name="mnemonicCode"
+              type="text"
+              v-model="formInline.mnemonicCode"
+              placeholder="药品助记码">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item>
+            <el-button
+              type="primary"
+              :loading="loading1"
+              @click="onSubmit"
+              round
+              icon="el-icon-search">查询
+            </el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item>
+            <el-button
+              type="primary"
+              round
+              :loading="loading"
+              icon="el-icon-search"
+              @click.native.prevent="queryAll">显示全部药品信息
+            </el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
     <template>
       <el-table
         ref="multipleTable"
@@ -114,15 +146,31 @@
 </template>
 
 <script>
-var allData
+let allData
 export default {
   name: 'manage',
   data () {
+    const checkMnemonic = (rule, value, callback) => {
+      if (value === '') {
+        return callback(Error('请输入药品助记码'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: false,
+      loading1: false,
       total: 0,
       currentPage: 1,
       pageSize: 5,
+      formInline: {
+        mnemonicCode: ''
+      },
+      rules: {
+        mnemonicCode: [
+          { validator: checkMnemonic, trigger: 'blur' }
+        ]
+      },
       // 动态数据
       tableData: [],
       multipleSelection: []
@@ -138,17 +186,54 @@ export default {
         this.$refs.multipleTable.clearSelection()
       }
     },
+    onSubmit () {
+      let _this = this
+      this.$refs.formInline.validate((valid) => {
+        // 验证参数是否合法
+        if (valid) { // 合法
+          this.loading1 = true
+          // 向后端发送数据
+          this.$axios
+            .post('/repertory/manage/query', {
+              mnemonicCode: this.formInline.mnemonicCode
+            })
+            // 收到后端返回的成功代码
+            .then(res => {
+              this.loading1 = false
+              if (res.data.code === 200) {
+                _this.$store.commit('repertory', res.data.repertories)
+                allData = res.data.repertories
+                _this.tableData = res.data.repertories
+                _this.total = this.tableData.length
+                this.tableChange()
+                this.$message.success('操作执行成功！')
+              } else {
+                this.$message.error(res.data.message)
+              }
+            })
+            .catch(failResponse => {
+              this.loading1 = false
+              this.$message.error('服务器被干掉了！')
+            })
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('参数验证不合法！')
+          return false
+        }
+      })
+    },
     queryAll () {
       this.loading = true
-      var _this = this
+      let _this = this
       this.$axios.post('/repertory/manage/queryAll')
         .then(res => {
           this.loading = false
-          _this.$store.commit('queryAll', res.data.repertories)
+          _this.$store.commit('repertory', res.data.repertories)
           allData = res.data.repertories
           _this.tableData = res.data.repertories
           _this.total = this.tableData.length
           this.tableChange()
+          this.$message.success('操作执行成功！')
         })
         .catch(failResponse => {
           this.loading = false

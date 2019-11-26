@@ -22,4 +22,9 @@ public class DrugServiceImpl implements DrugService {
     public List<Drug> getAll() {
         return drugDao.returnAll();
     }
+
+    @Override
+    public List<Drug> getByMnemonicCode(String mnemonicCode) {
+        return drugDao.returnAllByMnemonicCode(mnemonicCode);
+    }
 }

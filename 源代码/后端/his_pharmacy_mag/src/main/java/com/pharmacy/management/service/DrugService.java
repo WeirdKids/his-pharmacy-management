@@ -11,4 +11,5 @@ import java.util.List;
 
 public interface DrugService {
     public List<Drug> getAll();
+    public List<Drug> getByMnemonicCode(String mnemonicCode);
 }

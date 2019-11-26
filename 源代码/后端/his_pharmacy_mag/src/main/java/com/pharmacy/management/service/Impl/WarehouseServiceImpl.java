@@ -22,4 +22,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     public List<Warehouse> getAll() {
         return warehouseDao.returnAll();
     }
+
+    @Override
+    public List<Warehouse> getByMnemonicCode(String mnemonicCode) {
+        return warehouseDao.returnAllByMnemonicCode(mnemonicCode);
+    }
 }
