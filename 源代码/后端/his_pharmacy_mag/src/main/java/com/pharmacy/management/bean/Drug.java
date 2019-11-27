@@ -1,53 +1,81 @@
 package com.pharmacy.management.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author 徐奥飞
- * @date 2019-11-8 7:50
+ * date 2019-11-8 7:50
  */
 @Entity // @Entity 表示这是一个实体类
 @Table(name = "drugs") // @Table(name=“drugs”) 表示对应的表名是 drugs
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer"})
-public class Drug {
+public class Drug implements Serializable {
 
-    @Id
+    @Id // 主键
     // @GeneratedValue 用于标注主键的生成策略，通过strategy 属性指定
     // IDENTITY：采用数据库ID自增长的方式来自增主键字段
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    int id;
+    @Column(name = "id", nullable = false)
+    private int id;
 
-    @Column(name = "drugscode")
-    String drugsCode;
+    @NotEmpty(message = "药品编码不能为空")
+    @Column(name = "drugscode", nullable = false)
+    private String drugsCode;
 
-    @Column(name = "drugsname")
-    String drugsName;
+//    @Id
+    @NotEmpty(message = "药品名称不能为空")
+    @Column(name = "drugsname", nullable = false)
+    private String drugsName;
 
-    @Column(name = "drugsformat")
-    String drugsFormat;
+    @NotEmpty(message = "药品规格不能为空")
+    @Column(name = "drugsformat", nullable = false)
+    private String drugsFormat;
 
-    @Column(name = "drugsunit")
-    String drugsUnit;
+    @NotEmpty(message = "药品单位不能为空")
+    @Column(name = "drugsunit", nullable = false)
+    private String drugsUnit;
 
-    @Column(name = "drugsdosageid")
-    int drugsDosageID;
+    @NotEmpty(message = "药品剂型不能为空")
+    @Column(name = "drugsdosageid", nullable = false, length = 4)
+    private int drugsDosageID;
 
-    @Column(name = "drugstypeid")
-    int drugsTypeID;
+    @NotEmpty(message = "药品类型不能为空")
+    @Column(name = "drugstypeid", nullable = false, length = 4)
+    private int drugsTypeID;
 
-    @Column(name = "drugsprice")
-    double drugsPrice;
+    @NotEmpty(message = "药品单价不能为")
+    @Column(name = "drugsprice", nullable = false, length = 5)
+    private double drugsPrice;
 
-    @Column(name = "mnemoniccode")
-    String mnemonicCode;
+    @NotEmpty(message = "药品助记码不能为空")
+    @Column(name = "mnemoniccode", nullable = false)
+    private String mnemonicCode;
 
-    int num;
+    @NotEmpty(message = "药品总数量不能为空")
+    @Column(name = "totalnum", nullable = false, length = 5)
+    private int totalNum;
 
-    @Column(name = "saverequire")
-    String saveRequire;
+    @NotEmpty(message = "药品保存条件不能为空")
+    @Column(name = "saverequire", nullable = false)
+    private String saveRequire;
+
+    // 级联保存、更新、删除、刷新；延迟加载。
+    // 当删除药品，会级联删除该药品的所有存放地点信息
+    // 拥有 mappedBy 注解的实体类为关系被维护端
+    // mappedBy = "drug" 中的 drug 是 Warehouse 中的 drug 属性
+    @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Warehouse> warehouses = new HashSet<Warehouse>(); // 存放地点列表
+
+    public Drug() {
+        super();
+    }
 
     public int getId() {
         return id;
@@ -121,12 +149,12 @@ public class Drug {
         this.mnemonicCode = mnemonicCode;
     }
 
-    public int getNum() {
-        return num;
+    public int getTotalNum() {
+        return totalNum;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum;
     }
 
     public String getSaveRequire() {
@@ -135,5 +163,17 @@ public class Drug {
 
     public void setSaveRequire(String saveRequire) {
         this.saveRequire = saveRequire;
+    }
+
+    // @JsonManagedReference 标注的属性在序列化时，会被序列化
+    // 但在反序列化时，如果没有该 @JsonManagedReference，则不会自动注入 @JsonBackReference 标注的属性
+    @JsonManagedReference
+    public Set<Warehouse> getWarehouses() {
+        return warehouses;
+    }
+
+    @JsonManagedReference
+    public void setWarehouses(Set<Warehouse> warehouses) {
+        this.warehouses = warehouses;
     }
 }

@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 /**
  * @author 徐奥飞
- * @date 2019-11-5 7:50
+ * date 2019-11-5 7:50
  */
 
 @Entity // @Entity 表示这是一个实体类
@@ -25,19 +25,21 @@ public class User {
     // IDENTITY：采用数据库ID自增长的方式来自增主键字段
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    int id;
+    private int id;
 
-    String username;
+    @Column(name = "username", nullable = false, length = 10)
+    private String username;
 
-    String password;
+    @Column(name = "password", nullable = false, length = 15)
+    private String password;
     // @Column(name = "realName")这样写访问数据库时会出错！(数据库的字段，数据库不区分大小写，这个要注意)
     // hibernate会按照驼峰命名规范将 realName 转成 real_name，相当于数据库中 realName 等于实体类中的 real_name (hibernate自动帮我们转换)
     // 所以，要按照下面这样写，访问数据库才能顺利进行
-    @Column(name = "realname")
-    String realName;
+    @Column(name = "realname", nullable = false, length = 15)
+    private String realName;
 
     // 账户当前状态（未登录 || 已登录）
-    String state;
+    private String state;
 
     public int getId() {
         return id;
