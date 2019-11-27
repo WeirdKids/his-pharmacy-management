@@ -15,9 +15,11 @@ import java.util.List;
 @Transactional // 执行修改方法时一定要添加这个注解和 @Modifying 注解
 public interface DrugDao extends JpaRepository<Drug, Integer> {
     //通过 mnemonicCode 字段查询到对应的一行或几行，并返回给Drug列表
-    List<Drug> findAllByMnemonicCode(String mnemonicCode);
+    List<Drug> findAllByMnemonicCodeLike(String mnemonicCode);
 
-    @Query(value = "select * from drugs where id < 51", nativeQuery = true)
+    List<Drug> findALLByDrugsNameLike(String drugsName);
+
+    @Query(value = "select * from drugs where id < 51",nativeQuery = true)
     List<Drug> returnAll();
 
     @Query(value = "select count(*) from drugs", nativeQuery = true)

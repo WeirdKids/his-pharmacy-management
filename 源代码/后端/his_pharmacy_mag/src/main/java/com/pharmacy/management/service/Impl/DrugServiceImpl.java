@@ -15,8 +15,11 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public List<Drug> getByMnemonicCode(String MnemonicCode) {
-        return drugDao.findAllByMnemonicCode(MnemonicCode);
+        return drugDao.findAllByMnemonicCodeLike(MnemonicCode);
     }
+
+    @Override
+    public List<Drug> getByDrugsName(String DrugsName){return drugDao.findALLByDrugsNameLike(DrugsName);}
 
     @Override
     public List<Drug> getAll() {
