@@ -134,18 +134,6 @@
             </el-table>
           </template>
         </el-table-column>
-<!--        <el-table-column-->
-<!--          prop="warehouses[{num}]"-->
-<!--          label="数量"-->
-<!--          width="130px"-->
-<!--          align="center">-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--          prop="warehouse"-->
-<!--          label="存放位置"-->
-<!--          width="130px"-->
-<!--          align="center">-->
-<!--        </el-table-column>-->
         <el-table-column label="操作" fixed="right" width="150" align="center">
           <template slot-scope="scope">
             <el-button
@@ -237,7 +225,7 @@ export default {
                 _this.tableData = res.data.drugs
                 _this.total = this.tableData.length
                 this.tableChange()
-                this.$message.success('操作执行成功！')
+                this.$message.success(res.data.message)
               } else {
                 this.$message.error(res.data.message)
               }
@@ -259,12 +247,12 @@ export default {
       this.$axios.post('/repertory/manage/queryAll')
         .then(res => {
           this.loading = false
-          _this.$store.commit('repertory', res.data.repertories)
-          allData = res.data.repertories
-          _this.tableData = res.data.repertories
+          _this.$store.commit('repertory', res.data.drugs)
+          allData = res.data.drugs
+          _this.tableData = res.data.drugs
           _this.total = this.tableData.length
           this.tableChange()
-          this.$message.success('操作执行成功！')
+          this.$message.success(res.data.message)
         })
         .catch(failResponse => {
           this.loading = false

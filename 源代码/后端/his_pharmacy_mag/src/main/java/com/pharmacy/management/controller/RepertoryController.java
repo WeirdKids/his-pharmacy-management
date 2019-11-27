@@ -33,4 +33,13 @@ public class RepertoryController {
             return new RepertoryResult(200, "操作执行成功", drugs);
         }
     }
+
+    @CrossOrigin
+    @PostMapping(value = "/api/repertory/manage/queryAll")
+    @ResponseBody
+    public RepertoryResult queryAll() {
+        List<Drug> drugs = new ArrayList<>();
+        drugs = drugService.getAll();
+        return new RepertoryResult(200, "操作执行成功", drugs);
+    }
 }
