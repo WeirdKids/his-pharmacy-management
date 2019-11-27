@@ -1,7 +1,6 @@
 package com.pharmacy.management.dao;
 
 import com.pharmacy.management.bean.Drug;
-import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;

@@ -66,43 +66,43 @@
         </el-table-column>
         <el-table-column
           prop="drugsName"
-          label="名称"
+          label="药品名称"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
           prop="drugsFormat"
-          label="规格"
+          label="药品规格"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
           prop="drugsUnit"
-          label="单位"
+          label="药品单位"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
           prop="drugsPrice"
-          label="单价"
+          label="药品单价"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
           prop="drugsDosageID"
-          label="剂型"
+          label="药品剂型"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
           prop="drugsTypeID"
-          label="类型"
+          label="药品类型"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
           prop="totalNum"
-          label="总数量"
+          label="药品总数量"
           width="130px"
           align="center"></el-table-column>
         <el-table-column
@@ -116,6 +116,7 @@
           prop="warehouses"
           label="存放信息"
           width="130px"
+          fixed="right"
           align="center">
           <template slot-scope="scope">
             <el-table :data="scope.row.warehouses">
@@ -134,19 +135,108 @@
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="150" align="center">
+        <el-table-column
+          label="操作"
+          fixed="right"
+          width="150"
+          align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="success"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              @click="handleEdit(scope.$index, scope.row), dialogFormVisible = true"
+            >编辑</el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              @click="handleDelete(scope.$index, scope.row)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog
+        title="药品信息"
+        :visible.sync="dialogFormVisible">
+        <el-form :model="form" ref="form" label-width="80px">
+          <el-form-item v-model="form.id"></el-form-item>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="药品编码">
+                <el-input v-model="form.drugsCode" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="药品名称">
+                <el-input v-model="form.drugsName" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="药品规格">
+                <el-input v-model="form.drugsFormat" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="保存条件">
+                <el-input v-model="form.saveRequire" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="药品单位">
+                <el-input v-model="form.drugsUnit" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="药品剂型">
+                <el-input v-model="form.drugsDosageID" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="药品类型">
+                <el-input v-model="form.drugsTypeID" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="药品单价">
+                <el-input v-model="form.drugsPrice"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="总数量">
+                <el-input v-model="form.totalNum" autocomplete="off" readonly></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="存放地点">
+                <!-- v-model 的值为当前被选中的 el-option 的 value 属性值-->
+                <el-select v-model="form.warehouse" placeholder="---" @change="handleInputNum">
+                  <el-option label="配药房" value="配药房"></el-option>
+                  <el-option label="储藏室" value="储藏室"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="数量">
+                <el-input
+                  v-model="form.num1"
+                  autocomplete="off"
+                  :disabled= disabledInput></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="handleCancel" size="small" round>取消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false, updateData(form)" size="small" round>确定</el-button>
+        </div>
+      </el-dialog>
     </template>
     <template>
       <div class="block">
@@ -166,6 +256,7 @@
 
 <script>
 let allData
+let id
 export default {
   name: 'manage',
   data () {
@@ -182,6 +273,21 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 5,
+      dialogFormVisible: false,
+      form: {
+        drugsName: '',
+        drugsCode: '',
+        drugsDosageID: '',
+        drugsFormat: '',
+        drugsPrice: '',
+        drugsTypeID: '',
+        drugsUnit: '',
+        saveRequire: '',
+        totalNum: '',
+        warehouse: '',
+        num1: ''
+      },
+      disabledInput: true,
       formInline: {
         mnemonicCode: ''
       },
@@ -253,6 +359,7 @@ export default {
           _this.total = this.tableData.length
           this.tableChange()
           this.$message.success(res.data.message)
+          console.log(res)
         })
         .catch(failResponse => {
           this.loading = false
@@ -281,15 +388,58 @@ export default {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
     },
     handleEdit (index, row) {
-      console.log(index, row)
+      // console.log(index, row)
+      this.form = {...row}
+      id = row.id
+      // console.log(id)
+      // console.log(row)
+    },
+    handleInputNum () {
+      this.disabledInput = false
+      let repertory = this.$store.getters.getRepertoryById(id)
+      let warehouses = repertory[0].warehouses
+      if (this.form.warehouse === warehouses[0].warehouse) {
+        this.$set(this.form, 'num1', warehouses[0].num)
+        // this.form.num = {warehouses[0].num}
+      } else {
+        this.$set(this.form, 'num1', warehouses[1].num)
+        // this.form.num1 = warehouses[1].num
+      }
+      console.log(warehouses)
+      // console.log(repertory)
+      // this.form.num = repertory[0].warehouses[0].num
+    },
+    handleCancel () {
+      this.dialogFormVisible = false
+      this.disabledInput = true
+    },
+    updateData (form) {
+
     },
     handleDelete (index, row) {
-      console.log(index, row)
+      this.$confirm('此操作将永久删除该药品信息，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   },
   computed: {
-    repertories () {
-      return this.$store.state.repertories
+    repertory () {
+      return this.$store.state.repertory
+    },
+    warehouses () {
+      return this.$store.state.warehouses
     }
   },
   created () {
@@ -300,9 +450,6 @@ export default {
       this.tableChange()
     }
   }
-  // activated () {
-  //   this.queryAll()
-  // }
 }
 </script>
 <style>
