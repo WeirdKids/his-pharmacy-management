@@ -16,6 +16,9 @@
               type="text"
               v-model="formInline.mnemonicCode"
               placeholder="药品助记码">
+              <span slot="prefix">
+                <svg-icon icon-class="mnemonicCode" style="color: #409eff;"></svg-icon>
+              </span>
             </el-input>
           </el-form-item>
         </el-col>
@@ -98,11 +101,10 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="num"
-          label="数量"
+          prop="totalNum"
+          label="总数量"
           width="130px"
-          align="center">
-        </el-table-column>
+          align="center"></el-table-column>
         <el-table-column
           prop="saveRequire"
           label="保存条件"
@@ -110,11 +112,40 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="warehouse"
-          label="存放位置"
+          type="expand"
+          prop="warehouses"
+          label="存放信息"
           width="130px"
           align="center">
+          <template slot-scope="scope">
+            <el-table :data="scope.row.warehouses">
+              <el-table-column
+                prop="num"
+                label="数量"
+                sortable
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="warehouse"
+                label="存放地点"
+                sortable
+                align="center">
+              </el-table-column>
+            </el-table>
+          </template>
         </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="warehouses[{num}]"-->
+<!--          label="数量"-->
+<!--          width="130px"-->
+<!--          align="center">-->
+<!--        </el-table-column>-->
+<!--        <el-table-column-->
+<!--          prop="warehouse"-->
+<!--          label="存放位置"-->
+<!--          width="130px"-->
+<!--          align="center">-->
+<!--        </el-table-column>-->
         <el-table-column label="操作" fixed="right" width="150" align="center">
           <template slot-scope="scope">
             <el-button
@@ -201,9 +232,9 @@ export default {
             .then(res => {
               this.loading1 = false
               if (res.data.code === 200) {
-                _this.$store.commit('repertory', res.data.repertories)
-                allData = res.data.repertories
-                _this.tableData = res.data.repertories
+                _this.$store.commit('repertory', res.data.drugs)
+                allData = res.data.drugs
+                _this.tableData = res.data.drugs
                 _this.total = this.tableData.length
                 this.tableChange()
                 this.$message.success('操作执行成功！')
@@ -274,9 +305,9 @@ export default {
     }
   },
   created () {
-    if (sessionStorage.getItem('repertories')) {
-      allData = this.$store.state.repertories
-      this.tableData = this.$store.state.repertories
+    if (sessionStorage.getItem('repertory')) {
+      allData = this.$store.state.repertory
+      this.tableData = this.$store.state.repertory
       this.total = this.tableData.length
       this.tableChange()
     }
