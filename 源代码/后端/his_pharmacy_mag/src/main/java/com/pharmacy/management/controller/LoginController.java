@@ -32,11 +32,11 @@ public class LoginController {
 
         User user = userService.getByUserName(username);
         if (user == null) {
-            return new LoginResult(400, "此用户名不存在！", "", null);
+            return new LoginResult(400, "此用户名不存在！", null);
         } else if (user.getPassword().equals(requestUser.getPassword())) {
-            return new LoginResult(200, "登陆成功!", "", user);
+            return new LoginResult(200, "登陆成功!", user);
         } else {
-            return new LoginResult(400, "密码错误！", "", null);
+            return new LoginResult(400, "密码错误！", null);
         }
     }
 }

@@ -10,19 +10,30 @@ const state = {
     username: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')).username,
     realName: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')).realName
   },
-  drugs: {
+  repertory: {
     // id: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).id,
-    drugsCode: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsCode,
-    drugsName: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsName,
-    drugsFormat: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsFormat,
-    drugsUnit: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsUnit,
-    drugsDosageID: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsDosageID,
-    drugsTypeID: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsTypeID,
-    drugsPrice: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).drugsPrice,
-    mnemonicCode: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).mnemonicCode,
-    num: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).num,
-    saveRequire: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).saveRequire
+    drugsCode: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsCode,
+    drugsName: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsName,
+    drugsFormat: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsFormat,
+    drugsUnit: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsUnit,
+    drugsDosageID: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsDosageID,
+    drugsTypeID: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsTypeID,
+    drugsPrice: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsPrice,
+    mnemonicCode: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).mnemonicCode,
+    totalNum: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).totalNum,
+    saveRequire: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).saveRequire,
+    warehouses: [
+      {
+        num: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).num,
+        warehouse: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).warehouse
+      }
+    ],
+    currentPage: window.sessionStorage.getItem('repertory' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).currentPage,
+    pageSize: window.sessionStorage.getItem('repertory' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).pageSize
   }
+  //   {
+  //   num: window.sessionStorage.getItem('warehouses' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('warehouses' || '[]')).num,
+  //   warehouse: window.sessionStorage.getItem('warehouses' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('warehouses' || '[]')).warehouse
+  // }
 }
-
 export default state
