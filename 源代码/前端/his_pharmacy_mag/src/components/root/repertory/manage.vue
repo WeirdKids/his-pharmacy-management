@@ -430,14 +430,16 @@ export default {
     // 修改每页条数触发
     handleSizeChange (val) {
       this.pageSize = val
+      this.$store.commit('updatePageSize', val)
       // this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pagesize)
-      // this.currentPage = 1
+      this.currentPage = 1
       this.tableChange()
       // console.log(`每页 ${val} 条`)
     },
     // 翻页触发
     handleCurrentChange (val) {
       this.currentPage = val
+      this.$store.commit('updateCurrentPage', val)
       // this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
       this.tableChange()
       // console.log(`当前页: ${val}`)
@@ -486,6 +488,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        // this.tableData.splice(index, 1)
+        // console.log(this.tableData)
         this.$message({
           type: 'success',
           message: '删除成功'
@@ -511,6 +515,8 @@ export default {
       allData = this.$store.state.repertory
       this.tableData = this.$store.state.repertory
       this.total = this.tableData.length
+      this.pageSize = this.$store.state.repTable.pageSize
+      this.currentPage = this.$store.state.repTable.currentPage
       this.tableChange()
     }
   }
