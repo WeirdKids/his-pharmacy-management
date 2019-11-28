@@ -1,5 +1,6 @@
 package com.pharmacy.management.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.result.RepertoryResult;
 import com.pharmacy.management.service.DrugService;
@@ -21,7 +22,7 @@ public class RepertoryController {
 
     // 解决跨域问题
     @CrossOrigin
-    @PostMapping(value = "/api/repertory/manage/query")
+    @PostMapping(value = "/api/query")
     @ResponseBody
     public RepertoryResult query(@RequestBody Drug requestDrug) {
         String mnemonicCode = requestDrug.getMnemonicCode();
@@ -35,11 +36,28 @@ public class RepertoryController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/api/repertory/manage/queryAll")
+    @PostMapping(value = "/api/queryAll")
     @ResponseBody
     public RepertoryResult queryAll() {
         List<Drug> drugs = new ArrayList<>();
         drugs = drugService.getAll();
         return new RepertoryResult(200, "操作执行成功", drugs);
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/api/deleteRepertory")
+    @ResponseBody
+    public RepertoryResult deleteRepertory(@RequestBody Drug requestDrug) {
+        int id = requestDrug.getId();
+        String s = requestDrug.getMnemonicCode();
+        drugService.deleteRepertory(id);
+        List<Drug>  drugs = new ArrayList<>();
+        if (s.isEmpty()) {
+            drugs = drugService.getAll();
+            return new RepertoryResult(200, "删除成功", drugs);
+        } else {
+            drugs = drugService.getByMnemonicCode(s);
+            return new RepertoryResult(200, "删除成功", drugs);
+        }
     }
 }

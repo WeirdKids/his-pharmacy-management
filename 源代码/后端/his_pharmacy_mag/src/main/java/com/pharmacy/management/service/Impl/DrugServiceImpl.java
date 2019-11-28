@@ -4,10 +4,8 @@ import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.dao.DrugDao;
 import com.pharmacy.management.service.DrugService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -28,5 +26,10 @@ public class DrugServiceImpl implements DrugService {
     @Override
     public List<Drug> getAll() {
         return drugDao.returnAll();
+    }
+
+    @Override
+    public void deleteRepertory(int id) {
+        drugDao.deleteById(id);
     }
 }

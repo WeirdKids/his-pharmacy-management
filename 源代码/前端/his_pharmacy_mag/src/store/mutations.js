@@ -25,5 +25,4 @@ const mutations = {
     window.sessionStorage.setItem('repTable', JSON.stringify(state.repTable))
   }
 }
-
 export default mutations

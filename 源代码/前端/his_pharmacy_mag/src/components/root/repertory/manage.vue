@@ -54,9 +54,13 @@
         tooltip-effect="dark"
         height="520"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
+        :row-key="getRowKeys"
         @selection-change="handleSelectionChange">
         <el-table-column
-          type="selection" fixed>
+          type="selection"
+          reserve-selection
+          width="40"
+          fixed>
         </el-table-column>
         <el-table-column
           prop="drugsCode"
@@ -369,6 +373,13 @@ export default {
         this.$refs.multipleTable.clearSelection()
       }
     },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+      console.log(val)
+    },
+    getRowKeys (row) {
+      return row.id
+    },
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {
@@ -377,7 +388,7 @@ export default {
           this.loading1 = true
           // 向后端发送数据
           this.$axios
-            .post('/repertory/manage/query', {
+            .post('/query', {
               mnemonicCode: this.formInline.mnemonicCode
             })
             // 收到后端返回的成功代码
@@ -388,7 +399,7 @@ export default {
                 allData = res.data.drugs
                 _this.tableData = res.data.drugs
                 _this.total = this.tableData.length
-                this.tableChange()
+                this.tableChange1()
                 this.$message.success(res.data.message)
               } else {
                 this.$message.error(res.data.message)
@@ -408,7 +419,8 @@ export default {
     queryAll () {
       this.loading = true
       let _this = this
-      this.$axios.post('/repertory/manage/queryAll')
+      this.formInline.mnemonicCode = ''
+      this.$axios.post('/queryAll')
         .then(res => {
           this.loading = false
           _this.$store.commit('repertory', res.data.drugs)
@@ -423,9 +435,6 @@ export default {
           this.loading = false
           this.$message.error('服务器被干掉了！')
         })
-    },
-    handleSelectionChange (val) {
-      this.multipleSelection = val
     },
     // 修改每页条数触发
     handleSizeChange (val) {
@@ -446,6 +455,9 @@ export default {
     },
     tableChange () {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+    },
+    tableChange1 () {
+      this.tableData = allData.slice(0 * this.pageSize, 1 * this.pageSize)
     },
     InputTotalNum () {
       this.$refs.form.validate((valid) => {
@@ -483,17 +495,29 @@ export default {
 
     },
     handleDelete (index, row) {
+      // console.log(row)
+      // console.log(row.id)
       this.$confirm('此操作将永久删除该药品信息，是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // this.tableData.splice(index, 1)
-        // console.log(this.tableData)
-        this.$message({
-          type: 'success',
-          message: '删除成功'
-        })
+        this.$axios
+          .post('/deleteRepertory', {
+            id: row.id,
+            mnemonicCode: this.formInline.mnemonicCode
+          })
+          .then(res => {
+            this.$store.commit('repertory', res.data.drugs)
+            allData = res.data.drugs
+            this.tableData = res.data.drugs
+            this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          })
+          .catch(failResponse => {
+            this.$message.error('服务器表示不想理你！')
+          })
       }).catch(() => {
         this.$message({
           type: 'info',
