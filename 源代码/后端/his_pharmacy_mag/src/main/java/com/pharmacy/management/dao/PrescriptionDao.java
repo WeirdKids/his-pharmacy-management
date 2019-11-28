@@ -1,4 +1,4 @@
-﻿package com.pharmacy.management.dao;
+package com.pharmacy.management.dao;
 
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Prescription;
@@ -14,6 +14,8 @@ import java.util.List;
  */
 @Transactional // 执行修改方法时一定要添加这个注解和 @Modifying 注解
 public interface PrescriptionDao extends JpaRepository<Prescription, Integer> {
+    List<Prescription> findAllByPrescriptionCodeLike(String presCode);
 
-
+    @Query(value="select * from drugs limit 50", nativeQuery = true)
+    List<Prescription> returnAll();
 }

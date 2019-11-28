@@ -32,18 +32,18 @@ const state = {
     pageSize: window.sessionStorage.getItem('repertory' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).pageSize
   },
   drug: {
-    drugsCode: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsCode,
-    drugsName: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsName,
-    drugsFormat: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsFormat,
-    drugsUnit: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsUnit,
-    drugsDosageID: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsDosageID,
-    drugsTypeID: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsTypeID,
-    drugsPrice: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsPrice,
-    mnemonicCode: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).mnemonicCode,
-    totalNum: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).totalNum,
-    saveRequire: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).saveRequire,
-    currentPage: window.sessionStorage.getItem('repertory' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).currentPage,
-    pageSize: window.sessionStorage.getItem('repertory' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).pageSize
+    drugsCode: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsCode,
+    drugsName: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsName,
+    drugsFormat: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsFormat,
+    drugsUnit: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsUnit,
+    drugsDosageID: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsDosageID,
+    drugsTypeID: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsTypeID,
+    drugsPrice: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsPrice,
+    mnemonicCode: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).mnemonicCode,
+    totalNum: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).totalNum,
+    saveRequire: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).saveRequire,
+    currentPage: window.sessionStorage.getItem('drug' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).currentPage,
+    pageSize: window.sessionStorage.getItem('drug' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).pageSize
   }
   //   {
   //   num: window.sessionStorage.getItem('warehouses' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('warehouses' || '[]')).num,

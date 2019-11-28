@@ -1,5 +1,6 @@
 package com.pharmacy.management.bean;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -27,8 +28,6 @@ public class Prescription {
     @Column(name = "charger")
     String chargerName;
 
-    @Column(name ="drugname")
-    String drugName;
 
     @Column(name="statue")
     String statue;
@@ -36,7 +35,12 @@ public class Prescription {
     @Column(name = "stage")
     String stage;
 
+    @Column(name = "num")
     int num;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "drug_id")
+    Drug drug;
 
     public int getId(){return id;}
     public void setId(int id){this.id=id;}
@@ -53,8 +57,6 @@ public class Prescription {
     public String getChargerName(){return chargerName;}
     public void setChargerName(String chargerName){this.chargerName=chargerName;}
 
-    public String getDrugName(){return drugName;}
-    public void setDrugName(String drugName){this.drugName=drugName;}
 
     public String getStatue(){return statue;}
     public void setStatue(String statue){this.statue=statue;}
@@ -64,4 +66,10 @@ public class Prescription {
 
     public int getNum(){return num;}
     public void setNum(int num){this.num=num;}
+
+    @JsonBackReference
+    public Drug getDrug(){return drug;}
+
+    @JsonBackReference
+    public void setDrug(Drug drug){this.drug=drug;}
 }

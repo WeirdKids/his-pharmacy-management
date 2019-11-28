@@ -24,7 +24,7 @@ public class QueryDrugsController {
     public QueryDrugsResult query(@RequestBody Drug requestDrugs){
         String mnemonicCode = requestDrugs.getMnemonicCode();
         List<Drug> drugs = new ArrayList<>();
-        drugs = drugService.getByMnemonicCode(mnemonicCode);
+        drugs = drugService.getByMnemonicCodeLike("%" + mnemonicCode + "%");
         if (drugs.size() == 0) {
             return new QueryDrugsResult(400, "没有匹配数据", null);
         } else {

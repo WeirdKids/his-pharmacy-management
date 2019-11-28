@@ -1,4 +1,4 @@
-﻿package com.pharmacy.management.dao;
+package com.pharmacy.management.dao;
 
 import com.pharmacy.management.bean.Drug;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -18,7 +18,7 @@ public interface DrugDao extends JpaRepository<Drug, Integer> {
     //通过 mnemonicCode 字段查询到对应的一行或几行，并返回给Drug列表
     List<Drug> findAllByMnemonicCodeLike(String mnemonicCode);
 
-    List<Drug> findALLByDrugsNameLike(String drugsName);
+    List<Drug> findAllByDrugsNameLike(String drugsName);
 
     @Query(value = "select * from drugs limit 50", nativeQuery = true)
     List<Drug> returnAll();

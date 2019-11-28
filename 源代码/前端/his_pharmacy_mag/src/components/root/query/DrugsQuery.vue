@@ -61,7 +61,7 @@
         <el-table-column
           prop="drugsCode"
           label="药品编码"
-          width="130px"
+          width="150px"
           align="center">
         </el-table-column>
         <el-table-column
@@ -73,7 +73,7 @@
         <el-table-column
           prop="drugsFormat"
           label="规格"
-          width="130px"
+          width="150px"
           align="center">
         </el-table-column>
         <el-table-column
@@ -185,7 +185,7 @@ export default {
             .then(res => {
               this.loading1 = false
               if (res.data.code === 200) {
-                _this.$store.commit('query', res.data.drugs)
+                _this.$store.commit('drug', res.data.drugs)
                 allData = res.data.drugs
                 _this.tableData = res.data.drugs
                 _this.total = this.tableData.length
@@ -197,7 +197,7 @@ export default {
             })
             .catch(failResponse => {
               this.loading1 = false
-              this.$message.error('1服务器被干掉了！')
+              this.$message.error('服务器被干掉了！')
             })
         } else {
           // eslint-disable-next-line no-console
@@ -212,7 +212,7 @@ export default {
       this.$axios.post('/query/drugs_query/queryAll')
         .then(res => {
           this.loading = false
-          _this.$store.commit('query', res.data.drugs)
+          _this.$store.commit('drug', res.data.drugs)
           allData = res.data.drugs
           _this.tableData = res.data.drugs
           _this.total = this.tableData.length
@@ -221,7 +221,7 @@ export default {
         })
         .catch(failResponse => {
           this.loading = false
-          this.$message.error('2服务器被干掉了！')
+          this.$message.error('服务器被干掉了！')
         })
     },
     handleSelectionChange (val) {

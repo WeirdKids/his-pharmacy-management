@@ -1,4 +1,4 @@
-﻿package com.pharmacy.management.service;
+package com.pharmacy.management.service;
 
 import com.pharmacy.management.bean.Drug;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 public interface DrugService {
-    public List<Drug> getByMnemonicCode(String mnemonicCode);
-    public List<Drug> getByDrugsName(String DrugsName);
+    public List<Drug> getByMnemonicCodeLike(String mnemonicCode);
+    public List<Drug> getByDrugsNameLike(String DrugsName);
     public List<Drug> getAll();
 }
