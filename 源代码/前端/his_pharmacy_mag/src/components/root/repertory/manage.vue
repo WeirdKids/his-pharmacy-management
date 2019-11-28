@@ -157,7 +157,12 @@
       <el-dialog
         title="药品信息"
         :visible.sync="dialogFormVisible">
-        <el-form :model="form" ref="form" label-width="80px">
+        <el-form
+          :model="form"
+          ref="form"
+          label-width="80px"
+          status-icon
+          :rules="rules1">
           <el-form-item v-model="form.id"></el-form-item>
           <el-row>
             <el-col :span="12">
@@ -202,32 +207,32 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="药品单价">
+              <el-form-item label="药品单价" prop="drugsPrice">
                 <el-input v-model="form.drugsPrice"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="总数量">
-                <el-input v-model="form.totalNum" autocomplete="off" readonly></el-input>
+                <el-input
+                  v-model="form.totalNum"
+                  readonly
+                  @focus="InputTotalNum"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="存放地点">
-                <!-- v-model 的值为当前被选中的 el-option 的 value 属性值-->
-                <el-select v-model="form.warehouse" placeholder="---" @change="handleInputNum">
-                  <el-option label="配药房" value="配药房"></el-option>
-                  <el-option label="储藏室" value="储藏室"></el-option>
-                </el-select>
+              <el-form-item label="配药房" prop="num1">
+                <el-input
+                  v-model="form.num1">
+                </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="数量">
+              <el-form-item label="储藏室" prop="num2">
                 <el-input
-                  v-model="form.num1"
-                  autocomplete="off"
-                  :disabled= disabledInput></el-input>
+                  v-model="form.num2">
+                </el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -256,7 +261,6 @@
 
 <script>
 let allData
-let id
 export default {
   name: 'manage',
   data () {
@@ -266,6 +270,43 @@ export default {
       } else {
         callback()
       }
+    }
+    const isNumber = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('输入不可为空'))
+      } else {
+        setTimeout(() => {
+          if (!Number(value)) {
+            return callback(new Error('请输入正数'))
+          } else {
+            const re = /^[1-9]\d*(\.[0-9]+)?$|^0$/
+            const reCheck = re.test(value)
+            if (!reCheck) {
+              return callback(new Error('请输入正数'))
+            } else {
+              callback()
+            }
+          }
+        }, 300)
+      }
+    }
+    const isInteger = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('输入不可为空'))
+      }
+      setTimeout(() => {
+        if (!Number(value)) {
+          return callback(new Error('请输入正整数'))
+        } else {
+          const re = /^[1-9]\d*$|^0$/
+          const reCheck = re.test(value)
+          if (!reCheck) {
+            return callback(new Error('请输入正整数'))
+          } else {
+            callback()
+          }
+        }
+      }, 300)
     }
     return {
       loading: false,
@@ -285,15 +326,26 @@ export default {
         saveRequire: '',
         totalNum: '',
         warehouse: '',
-        num1: ''
+        num1: 0,
+        num2: 0
       },
-      disabledInput: true,
       formInline: {
         mnemonicCode: ''
       },
       rules: {
         mnemonicCode: [
           { validator: checkMnemonic, trigger: 'blur' }
+        ]
+      },
+      rules1: {
+        drugsPrice: [
+          { validator: isNumber, trigger: 'blur' }
+        ],
+        num1: [
+          { validator: isInteger, trigger: 'blur' }
+        ],
+        num2: [
+          { validator: isInteger, trigger: 'blur' }
         ]
       },
       // 动态数据
@@ -359,7 +411,7 @@ export default {
           _this.total = this.tableData.length
           this.tableChange()
           this.$message.success(res.data.message)
-          console.log(res)
+          // console.log(res)
         })
         .catch(failResponse => {
           this.loading = false
@@ -387,31 +439,37 @@ export default {
     tableChange () {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
     },
-    handleEdit (index, row) {
-      // console.log(index, row)
-      this.form = {...row}
-      id = row.id
-      // console.log(id)
-      // console.log(row)
+    InputTotalNum () {
+      this.$refs.form.validate((valid) => {
+        // 验证参数是否合法
+        if (valid) { // 合法
+          this.$set(this.form, 'totalNum', String((parseInt(this.form.num1) + parseInt(this.form.num2))))
+        } else {
+          return false
+        }
+      })
     },
-    handleInputNum () {
-      this.disabledInput = false
-      let repertory = this.$store.getters.getRepertoryById(id)
-      let warehouses = repertory[0].warehouses
-      if (this.form.warehouse === warehouses[0].warehouse) {
-        this.$set(this.form, 'num1', warehouses[0].num)
-        // this.form.num = {warehouses[0].num}
+    handleEdit (index, row) {
+      this.form = {...row}
+      this.$set(this.form, 'drugsPrice', row.drugsPrice)
+      // console.log(row.warehouses)
+      let warehouses = row.warehouses
+      if (warehouses.length === 2) {
+        // this.$set 解决给输入框赋值后无法修改的问题
+        this.$set(this.form, 'num1', (warehouses[0].warehouse === '配药房') ? warehouses[0].num : warehouses[1].num)
+        this.$set(this.form, 'num2', (warehouses[1].warehouse === '储藏室') ? warehouses[1].num : warehouses[0].num)
+        // this.form.num1 = (warehouses[0].warehouse === '配药房') ? warehouses[0].num : warehouses[1].num
+        // this.form.num2 = (warehouses[1].warehouse === '储藏室') ? warehouses[1].num : warehouses[0].num
+      } else if (warehouses.length === 1) {
+        this.$set(this.form, 'num1', (warehouses[0].warehouse === '配药房') ? warehouses[0].num : 0)
+        this.$set(this.form, 'num2', (warehouses[0].warehouse === '储藏室') ? warehouses[0].num : 0)
       } else {
-        this.$set(this.form, 'num1', warehouses[1].num)
-        // this.form.num1 = warehouses[1].num
+        this.$set(this.form, 'num1', 0)
+        this.$set(this.form, 'num2', 0)
       }
-      console.log(warehouses)
-      // console.log(repertory)
-      // this.form.num = repertory[0].warehouses[0].num
     },
     handleCancel () {
       this.dialogFormVisible = false
-      this.disabledInput = true
     },
     updateData (form) {
 
