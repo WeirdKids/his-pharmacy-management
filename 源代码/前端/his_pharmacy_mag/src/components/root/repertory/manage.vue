@@ -71,6 +71,12 @@
           align="center">
         </el-table-column>
         <el-table-column
+          prop="mnemonicCode"
+          label="药品助记码"
+          width="130px"
+          align="center">
+        </el-table-column>
+        <el-table-column
           prop="drugsFormat"
           label="药品规格"
           width="130px"

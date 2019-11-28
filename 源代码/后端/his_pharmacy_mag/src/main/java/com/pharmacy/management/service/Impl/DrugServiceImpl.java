@@ -22,7 +22,7 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public List<Drug> getByMnemonicCode(String mnemonicCode) {
-        return drugDao.findAllByMnemonicCode(mnemonicCode);
+        return drugDao.findAllByMnemonicCodeLike(mnemonicCode);
     }
 
     @Override

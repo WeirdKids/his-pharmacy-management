@@ -26,7 +26,7 @@ public class RepertoryController {
     public RepertoryResult query(@RequestBody Drug requestDrug) {
         String mnemonicCode = requestDrug.getMnemonicCode();
         List<Drug> drugs = new ArrayList<>();
-        drugs = drugService.getByMnemonicCode(mnemonicCode);
+        drugs = drugService.getByMnemonicCode("%"+ mnemonicCode +"%");
         if (drugs.size() == 0) {
             return new RepertoryResult(400, "没有匹配数据", null);
         } else {
