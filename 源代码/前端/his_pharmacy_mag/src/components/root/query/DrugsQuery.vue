@@ -253,14 +253,14 @@ export default {
     }
   },
   computed: {
-    queries () {
-      return this.$store.state.queries
+    drugs () {
+      return this.$store.state.drugs
     }
   },
   created () {
-    if (sessionStorage.getItem('query')) {
-      allData = this.$store.state.query
-      this.tableData = this.$store.state.query
+    if (sessionStorage.getItem('drug')) {
+      allData = this.$store.state.drug
+      this.tableData = this.$store.state.drug
       this.total = this.tableData.length
       this.tableChange()
     }
