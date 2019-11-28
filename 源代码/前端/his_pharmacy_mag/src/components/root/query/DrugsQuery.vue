@@ -111,41 +111,6 @@
           width="130px"
           align="center">
         </el-table-column>
-        <el-table-column
-          type="expand"
-          prop="warehouses"
-          label="存放信息"
-          width="130px"
-          align="center">
-          <template slot-scope="scope">
-            <el-table :data="scope.row.warehouses">
-              <el-table-column
-                prop="num"
-                label="数量"
-                sortable
-                align="center">
-              </el-table-column>
-              <el-table-column
-                prop="warehouse"
-                label="存放地点"
-                sortable
-                align="center">
-              </el-table-column>
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" fixed="right" width="150" align="center">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="success"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
       </el-table>
     </template>
     <template>
@@ -213,14 +178,14 @@ export default {
           this.loading1 = true
           // 向后端发送数据
           this.$axios
-            .post('/repertory/manage/query', {
+            .post('/query/drugs_query/query', {
               mnemonicCode: this.formInline.mnemonicCode
             })
             // 收到后端返回的成功代码
             .then(res => {
               this.loading1 = false
               if (res.data.code === 200) {
-                _this.$store.commit('repertory', res.data.drugs)
+                _this.$store.commit('query', res.data.drugs)
                 allData = res.data.drugs
                 _this.tableData = res.data.drugs
                 _this.total = this.tableData.length
@@ -232,7 +197,7 @@ export default {
             })
             .catch(failResponse => {
               this.loading1 = false
-              this.$message.error('服务器被干掉了！')
+              this.$message.error('1服务器被干掉了！')
             })
         } else {
           // eslint-disable-next-line no-console
@@ -244,10 +209,10 @@ export default {
     queryAll () {
       this.loading = true
       let _this = this
-      this.$axios.post('/repertory/manage/queryAll')
+      this.$axios.post('/query/drugs_query/queryAll')
         .then(res => {
           this.loading = false
-          _this.$store.commit('repertory', res.data.drugs)
+          _this.$store.commit('query', res.data.drugs)
           allData = res.data.drugs
           _this.tableData = res.data.drugs
           _this.total = this.tableData.length
@@ -256,7 +221,7 @@ export default {
         })
         .catch(failResponse => {
           this.loading = false
-          this.$message.error('服务器被干掉了！')
+          this.$message.error('2服务器被干掉了！')
         })
     },
     handleSelectionChange (val) {
@@ -288,14 +253,14 @@ export default {
     }
   },
   computed: {
-    repertories () {
-      return this.$store.state.repertories
+    queries () {
+      return this.$store.state.queries
     }
   },
   created () {
-    if (sessionStorage.getItem('repertory')) {
-      allData = this.$store.state.repertory
-      this.tableData = this.$store.state.repertory
+    if (sessionStorage.getItem('query')) {
+      allData = this.$store.state.query
+      this.tableData = this.$store.state.query
       this.total = this.tableData.length
       this.tableChange()
     }
