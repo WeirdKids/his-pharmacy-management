@@ -13,7 +13,8 @@ import java.util.List;
 
 public interface DrugService {
     public List<Drug> getByMnemonicCodeLike(String mnemonicCode);
-    public List<Drug> getByDrugsNameLike(String DrugsName);
+    public Drug getByDrugsName(String DrugsName);
     public List<Drug> getAll();
-    public List<Drug> getById(int id);
+    public Drug getById(int id);
+    public void Update(Drug drug);
 }

@@ -14,4 +14,6 @@ import java.util.List;
 public interface PresService {
     public List<Prescription> getByPresCode(int PresCode);
     public List<Prescription> getAll();
+    public Prescription getByPresId(int pres_id);
+    public void Update(Prescription prescription);
 }

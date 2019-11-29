@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -71,7 +72,7 @@ public class Drug implements Serializable {
     // 拥有 mappedBy 注解的实体类为关系被维护端
     // mappedBy = "drug" 中的 drug 是 Warehouse 中的 drug 属性
     @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Warehouse> warehouses = new HashSet<Warehouse>(); // 存放地点列表
+    private List<Warehouse> warehouses = new ArrayList<>(); // 存放地点列表
 
     public Drug() {
         super();
@@ -168,12 +169,12 @@ public class Drug implements Serializable {
     // @JsonManagedReference 标注的属性在序列化时，会被序列化
     // 但在反序列化时，如果没有该 @JsonManagedReference，则不会自动注入 @JsonBackReference 标注的属性
     @JsonManagedReference
-    public Set<Warehouse> getWarehouses() {
+    public List<Warehouse> getWarehouses() {
         return warehouses;
     }
 
     @JsonManagedReference
-    public void setWarehouses(Set<Warehouse> warehouses) {
+    public void setWarehouses(List<Warehouse> warehouses) {
         this.warehouses = warehouses;
     }
 }

@@ -13,7 +13,7 @@
           <el-form-item prop="prescriptionCode" style="position: absolute;">
             <el-input
               name="prescriptionCode"
-              type="number"
+              type="text"
               v-model="formInline.prescriptionCode"
               placeholder="处方单号">
               <span slot="prefix">
@@ -40,7 +40,7 @@
               round
               :loading="loading"
               icon="el-icon-search"
-              @click.native.prevent="queryAll">显示全部处方信息
+              @click.native.prevent="queryAll">显示全部处方单信息
             </el-button>
           </el-form-item>
         </el-col>
@@ -48,16 +48,13 @@
     </el-form>
     <template>
       <el-table
-        ref="multipleTable"
+        ref="=Table"
         :data="tableData"
         :row-style="{height: 90 + 'px'}"
         tooltip-effect="dark"
         height="520"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
-        @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection" fixed>
-        </el-table-column>
+        >
         <el-table-column
           prop="prescriptionCode"
           label="处方单号"
@@ -111,6 +108,25 @@
           label="发送数量"
           width="130px"
           align="center"></el-table-column>
+        <el-table-column
+          prop="drugName"
+          label="保存条件"
+          width="130px"
+          align="center">
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" width="150" align="center">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleEdit(scope.$index, scope.row)">发药
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">退处方</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </template>
     <template>
@@ -132,11 +148,11 @@
 <script>
 let allData
 export default {
-  name: 'presQuery',
+  name: 'manage',
   data () {
     const checkMnemonic = (rule, value, callback) => {
       if (value === '') {
-        return callback(Error('请输入处方单号'))
+        return callback(Error('请输入处方编号'))
       } else {
         callback()
       }
@@ -156,7 +172,8 @@ export default {
         ]
       },
       // 动态数据
-      tableData: []
+      tableData: [],
+      multipleSelection: []
     }
   },
   methods: {
@@ -175,7 +192,6 @@ export default {
             .then(res => {
               this.loading1 = false
               if (res.data.code === 200) {
-                console.log(res)
                 _this.$store.commit('prescription', res.data.prescriptions)
                 allData = res.data.prescriptions
                 _this.tableData = res.data.prescriptions
@@ -199,23 +215,21 @@ export default {
     },
     queryAll () {
       this.loading = true
+      let _this = this
       this.$axios.post('/query/prescription_query/queryAll')
         .then(res => {
           this.loading = false
-          console.log(res)
-          this.$store.commit('prescription', res.data.prescriptions)
+          _this.$store.commit('repertory', res.data.prescriptions)
           allData = res.data.prescriptions
-          this.tableData = res.data.prescriptions
-          this.total = this.tableData.length
+          _this.tableData = res.data.prescriptions
+          _this.total = this.tableData.length
           this.tableChange()
+          this.$message.success(res.data.message)
         })
         .catch(failResponse => {
           this.loading = false
           this.$message.error('服务器被干掉了！')
         })
-    },
-    handleSelectionChange (val) {
-      this.multipleSelection = val
     },
     // 修改每页条数触发
     handleSizeChange (val) {
@@ -234,17 +248,24 @@ export default {
     },
     tableChange () {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+    },
+    handleEdit (index, row) {
+      console.log(index, row)
+      // post("/send")
+    },
+    handleDelete (index, row) {
+      console.log(index, row)
     }
   },
   computed: {
-    prescriptions () {
-      return this.$store.state.prescriptions
+    repertories () {
+      return this.$store.state.repertories
     }
   },
   created () {
-    if (sessionStorage.getItem('prescription')) {
-      allData = this.$store.state.prescription
-      this.tableData = this.$store.state.prescription
+    if (sessionStorage.getItem('repertory')) {
+      allData = this.$store.state.repertory
+      this.tableData = this.$store.state.repertory
       this.total = this.tableData.length
       this.tableChange()
     }

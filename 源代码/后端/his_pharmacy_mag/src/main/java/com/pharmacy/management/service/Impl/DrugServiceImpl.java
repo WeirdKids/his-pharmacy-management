@@ -27,7 +27,7 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public List<Drug> getByDrugsNameLike(String DrugsName){return drugDao.findAllByDrugsNameLike(DrugsName);}
+    public Drug getByDrugsName(String DrugsName){return drugDao.findAllByDrugsName(DrugsName);}
 
     @Override
     public List<Drug> getAll() {
@@ -35,5 +35,8 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public List<Drug> getById(int id){return drugDao.findAllById(id);}
+    public Drug getById(int id){return drugDao.findAllById(id);}
+
+    @Override
+    public void Update(Drug drug){drugDao.save(drug);}
 }

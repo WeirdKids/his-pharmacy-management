@@ -8,7 +8,7 @@ import java.util.Date;
 
 
 @Entity // @Entity 表示这是一个实体类
-@Table(name = "prescriptions") // @Table(name=“drugs”) 表示对应的表名是 drugs
+@Table(name = "prescriptions")
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer"})
 public class Prescription {
     @Id
@@ -32,11 +32,17 @@ public class Prescription {
     @Column(name="statue")
     String statue;
 
-    @Column(name = "stage")
-    String stage;
+    @Column(name = "totalstage")
+    int totalStage;
+
+    @Column(name = "currentstage")
+    int currentStage;
 
     @Column(name = "num")
     int num;
+
+    @Column(name = "sentnum")
+    int sentNum;
 
    @Column(name = "drugname")
     String drugName;
@@ -60,12 +66,18 @@ public class Prescription {
     public String getStatue(){return statue;}
     public void setStatue(String statue){this.statue=statue;}
 
-    public String getStage(){return stage;}
-    public void setStage(String stage){this.stage=stage;}
+    public int getTotalStage(){return totalStage;}
+    public void setTotalStage(int totalStage){this.totalStage=totalStage;}
+
+    public int getCurrentStage(){return currentStage;}
+    public void setCurrentStage(int currentStage){this.currentStage=currentStage;}
 
     public int getNum(){return num;}
     public void setNum(int num){this.num=num;}
 
-    public String getDrug(){return drugName;}
-    public void setDrug(String drugName){this.drugName=drugName;}
+    public int getSentNum(){return sentNum;}
+    public void setSentNum(int sentNum){this.sentNum=sentNum;}
+
+    public String getDrugName(){return drugName;}
+    public void setDrugName(String drugName){this.drugName=drugName;}
 }

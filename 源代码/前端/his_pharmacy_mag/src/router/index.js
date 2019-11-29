@@ -5,8 +5,7 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import PresQuery from '@/components/root/query/PresQuery'
 import DrugsQuery from '@/components/root/query/DrugsQuery'
-import PeiYao from '@/components/root/outpatient/peiyao'
-import FaYao from '@/components/root/outpatient/fayao'
+import SendDrugs from '@/components/root/outpatient/SendDrugs'
 import RepertoryMag from '@/components/root/repertory/manage'
 import Stockout from '@/components/root/repertory/stockout'
 import Stock from '@/components/root/repertory/stock'
@@ -67,19 +66,9 @@ export default new Router({
           }
         },
         {
-          path: '/outpatient/peiYao',
-          name: '药房配药',
-          component: PeiYao,
-          meta: {
-            requireAuth: true,
-            keepAlive: true,
-            hidden: true
-          }
-        },
-        {
-          path: '/outpatient/faYao',
+          path: '/outpatient/sendDrugs',
           name: '药房发药',
-          component: FaYao,
+          component: SendDrugs,
           meta: {
             requireAuth: true,
             keepAlive: true,

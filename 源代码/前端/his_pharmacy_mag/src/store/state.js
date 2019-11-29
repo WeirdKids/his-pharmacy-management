@@ -51,8 +51,10 @@ const state = {
     chargeTime: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).chargeTime,
     charger: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).charger,
     statue: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).statue,
-    stage: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).stage,
+    totalStage: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).totalStage,
+    currentStage: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).currentStage,
     num: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).num,
+    sentNum: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).sentNum,
     drugName: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).drugName
   }
 }

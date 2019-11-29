@@ -46,10 +46,9 @@
               <el-submenu index="outpatient">
                 <template slot="title">
                   <svg-icon icon-class="outpatient" class="svgInfo"></svg-icon>
-                  <span class="title">配药发药</span>
+                  <span class="title">配发药管理</span>
                 </template>
-                <el-menu-item index="/outpatient/peiYao">药房配药</el-menu-item>
-                <el-menu-item index="/outpatient/faYao">药房发药</el-menu-item>
+                <el-menu-item index="/outpatient/sendDrugs">配发药管理</el-menu-item>
               </el-submenu>
               <el-submenu index="repertory">
                 <template slot="title">

@@ -22,4 +22,10 @@ public class PresServiceImpl implements PresService{
 
     @Override
     public List<Prescription> getAll(){return prescriptionDao.returnAll();}
+
+    @Override
+    public Prescription getByPresId(int pres_id){return prescriptionDao.findAllById(pres_id);}
+
+    @Override
+    public void Update(Prescription prescription){prescriptionDao.save(prescription);}
 }

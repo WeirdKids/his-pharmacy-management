@@ -22,7 +22,7 @@ public class PresQueryController {
     PresService presService;
 
     @CrossOrigin
-    @PostMapping(value = "/api/query/pres_query/query")
+    @PostMapping(value = "/api/query/prescription_query/query")
     @ResponseBody
     public PresQueryResult query(@RequestBody Prescription requestPrescription){
         int PrescriptionCode = requestPrescription.getPrescriptionCode();
@@ -36,7 +36,7 @@ public class PresQueryController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/api/query/pres_query/queryAll")
+    @PostMapping(value = "/api/query/prescription_query/queryAll")
     @ResponseBody
     public PresQueryResult queryAll() {
         List<Prescription> prescriptions = new ArrayList<>();
