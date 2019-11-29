@@ -1,12 +1,12 @@
 package com.pharmacy.management.bean;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinColumnsOrFormulas;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * date 2019-11-12 7:50
  */
 @Entity // @Entity 表示这是一个实体类
-@Table(name = "warehouse") // @Table(name=“warehouse”) 表示对应的表名是 warehouse
+@Table(name = "warehouses") // @Table(name=“warehouse”) 表示对应的表名是 warehouse
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer"})
 public class Warehouse implements Serializable {
     @Id
@@ -24,7 +24,7 @@ public class Warehouse implements Serializable {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @NotEmpty(message = "当前存放地点的药品数量不能为空")
+    @NotNull(message = "当前存放地点的药品数量不能为空")
     @Column(name = "num", nullable = false, length = 5)
     private int num;
 
@@ -33,8 +33,9 @@ public class Warehouse implements Serializable {
     private String warehouse;
 
     // 可选属性 optional = false，表示 drug 不能为空。删除存放地点，不影响药品
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "drug_id") // 设置在 warehouse 表中的关联字段(外键)
+    @JsonIgnore
     private Drug drug;  // 所属药品
 
     public int getId() {

@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import './icons'
 import store from './store'
+import qs from 'qs'
 // 引入ElementUI
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -13,6 +14,7 @@ var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8088/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
 Vue.prototype.$axios = axios
+Vue.prototype.$qs = qs
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

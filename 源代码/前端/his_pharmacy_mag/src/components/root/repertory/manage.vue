@@ -8,43 +8,63 @@
       style="margin-top: -15px; height: 35px;"
       ref="formInline"
       size="mini">
-      <el-row>
-        <el-col :span="1">
-          <el-form-item prop="mnemonicCode" style="position: absolute;">
-            <el-input
-              name="mnemonicCode"
-              type="text"
-              v-model="formInline.mnemonicCode"
-              placeholder="药品助记码">
-              <span slot="prefix">
-                <svg-icon icon-class="mnemonicCode" style="color: #409eff;"></svg-icon>
-              </span>
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="10">
-          <el-form-item>
-            <el-button
-              type="primary"
-              :loading="loading1"
-              @click="onSubmit"
-              round
-              icon="el-icon-search">查询
-            </el-button>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item>
-            <el-button
-              type="primary"
-              round
-              :loading="loading"
-              icon="el-icon-search"
-              @click.native.prevent="queryAll">显示全部药品信息
-            </el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item>
+        <el-button
+          style="margin-right: 100%"
+          type="primary"
+          round
+          :loading="loading"
+          icon="el-icon-search"
+          @click.native.prevent="queryAll">显示全部药品信息
+        </el-button>
+      </el-form-item>
+      <el-form-item prop="mnemonicCode">
+        <el-input
+          name="mnemonicCode"
+          type="text"
+          style="width: 200px"
+          v-model="formInline.mnemonicCode"
+          placeholder="药品助记码">
+          <span slot="prefix">
+            <svg-icon icon-class="mnemonicCode" style="color: #409eff;"></svg-icon>
+          </span>
+        </el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          :loading="loading1"
+          @click="onSubmit"
+          round
+          align="center"
+          icon="el-icon-search">查询
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="danger"
+          round
+          :loading="loading2"
+          icon="el-icon-delete"
+          @click="handleDeleteAll">批量删除
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="success"
+          round
+          icon="el-icon-edit"
+          @click="handleEditAll">批量修改
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          round
+          icon="el-icon-plus"
+          @click="handleImport">导入数据
+        </el-button>
+      </el-form-item>
     </el-form>
     <template>
       <el-table
@@ -59,7 +79,6 @@
         <el-table-column
           type="selection"
           reserve-selection
-          width="40"
           fixed>
         </el-table-column>
         <el-table-column
@@ -114,7 +133,8 @@
           prop="totalNum"
           label="药品总数量"
           width="130px"
-          align="center"></el-table-column>
+          align="center">
+        </el-table-column>
         <el-table-column
           prop="saveRequire"
           label="保存条件"
@@ -286,16 +306,12 @@ export default {
         return callback(new Error('输入不可为空'))
       } else {
         setTimeout(() => {
-          if (!Number(value)) {
+          const re = /^((0{1}\.\d{1,2})|([1-9]\d*\.{1}\d{1,2})|([1-9]+\d*)|0)$/
+          const reCheck = re.test(value)
+          if (!reCheck) {
             return callback(new Error('请输入正数'))
           } else {
-            const re = /^[1-9]\d*(\.[0-9]+)?$|^0$/
-            const reCheck = re.test(value)
-            if (!reCheck) {
-              return callback(new Error('请输入正数'))
-            } else {
-              callback()
-            }
+            callback()
           }
         }, 300)
       }
@@ -305,27 +321,25 @@ export default {
         return callback(new Error('输入不可为空'))
       }
       setTimeout(() => {
-        if (!Number(value)) {
-          return callback(new Error('请输入正整数'))
+        const re = /^(0|[1-9][0-9]*)$/
+        const reCheck = re.test(value)
+        if (!reCheck) {
+          return callback(new Error('请输入正整数2'))
         } else {
-          const re = /^[1-9]\d*$|^0$/
-          const reCheck = re.test(value)
-          if (!reCheck) {
-            return callback(new Error('请输入正整数'))
-          } else {
-            callback()
-          }
+          callback()
         }
       }, 300)
     }
     return {
       loading: false,
       loading1: false,
+      loading2: false,
       total: 0,
       currentPage: 1,
       pageSize: 5,
       dialogFormVisible: false,
       form: {
+        id: '',
         drugsName: '',
         drugsCode: '',
         drugsDosageID: '',
@@ -333,9 +347,8 @@ export default {
         drugsPrice: '',
         drugsTypeID: '',
         drugsUnit: '',
-        saveRequire: '',
-        totalNum: '',
-        warehouse: '',
+        saveRequire: 0,
+        totalNum: 0,
         num1: 0,
         num2: 0
       },
@@ -349,13 +362,13 @@ export default {
       },
       rules1: {
         drugsPrice: [
-          { validator: isNumber, trigger: 'blur' }
+          { type: 'number', validator: isNumber, trigger: 'change' }
         ],
         num1: [
-          { validator: isInteger, trigger: 'blur' }
+          { type: 'number', validator: isInteger, trigger: 'change' }
         ],
         num2: [
-          { validator: isInteger, trigger: 'blur' }
+          { type: 'number', validator: isInteger, trigger: 'change' }
         ]
       },
       // 动态数据
@@ -375,11 +388,12 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
-      console.log(val)
+      // console.log(val)
     },
     getRowKeys (row) {
       return row.id
     },
+    // 根据助记码查询
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {
@@ -478,22 +492,61 @@ export default {
         // this.$set 解决给输入框赋值后无法修改的问题
         this.$set(this.form, 'num1', (warehouses[0].warehouse === '配药房') ? warehouses[0].num : warehouses[1].num)
         this.$set(this.form, 'num2', (warehouses[1].warehouse === '储藏室') ? warehouses[1].num : warehouses[0].num)
-        // this.form.num1 = (warehouses[0].warehouse === '配药房') ? warehouses[0].num : warehouses[1].num
-        // this.form.num2 = (warehouses[1].warehouse === '储藏室') ? warehouses[1].num : warehouses[0].num
       } else if (warehouses.length === 1) {
-        this.$set(this.form, 'num1', (warehouses[0].warehouse === '配药房') ? warehouses[0].num : 0)
-        this.$set(this.form, 'num2', (warehouses[0].warehouse === '储藏室') ? warehouses[0].num : 0)
+        this.$set(this.form, 'num1', (warehouses[0].warehouse === '配药房') ? warehouses[0].num : '0')
+        this.$set(this.form, 'num2', (warehouses[0].warehouse === '储藏室') ? warehouses[0].num : '0')
       } else {
-        this.$set(this.form, 'num1', 0)
-        this.$set(this.form, 'num2', 0)
+        this.$set(this.form, 'num1', '0')
+        this.$set(this.form, 'num2', '0')
       }
+    },
+    handleEditAll () {
+
     },
     handleCancel () {
       this.dialogFormVisible = false
+      this.$message.info('操作已取消')
     },
+    // 单个修改
     updateData (form) {
-
+      this.$refs.form.validate((valid) => {
+        // 验证参数是否合法
+        if (valid) { // 合法
+          form.totalNum = parseInt(form.num1) + parseInt(form.num2)
+          this.$axios
+            .post('/updateRepertory', {
+              id: parseInt(form.id),
+              totalNum: form.totalNum,
+              drugsPrice: form.drugsPrice,
+              mnemonicCode: this.formInline.mnemonicCode,
+              warehouses: [
+                {
+                  warehouse: '配药房',
+                  num: parseInt(form.num1),
+                  drug_id: parseInt(form.id)
+                },
+                {
+                  warehouse: '储藏室',
+                  num: parseInt(form.num2),
+                  drug_id: parseInt(form.id)
+                }
+              ]
+            })
+            .then(res => {
+              this.$store.commit('repertory', res.data.drugs)
+              allData = res.data.drugs
+              this.tableData = res.data.drugs
+              this.total = this.tableData.length
+              this.tableChange()
+              this.$message.success(res.data.message)
+            })
+            .catch(failResponse => {
+              this.$message.error('服务器表示不想理你！')
+            })
+        }
+      })
     },
+    // 单个删除
     handleDelete (index, row) {
       // console.log(row)
       // console.log(row.id)
@@ -512,6 +565,9 @@ export default {
             allData = res.data.drugs
             this.tableData = res.data.drugs
             this.total = this.tableData.length
+            // allData.splice(index, 1)
+            // this.tableData = allData
+            // this.total = allData.length
             this.tableChange()
             this.$message.success(res.data.message)
           })
@@ -524,6 +580,34 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    handleDeleteAll () {
+      if (this.multipleSelection.length === 0) {
+        this.$message.info('没有选中的数据，操作失败')
+      } else {
+        this.$confirm('此操作将永久删除选中的药品信息，是否继续？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post('/deleteOptions', this.$qs.stringify({
+            drugs: this.multipleSelection
+          }, { arrayFormat: 'indices' }))
+            .then(() => {
+              this.$message.success('批量删除成功！')
+            })
+            .catch(() => {
+              this.$message.error('服务器表示不想理你！')
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      }
+    },
+    handleImport () {
     }
   },
   computed: {
