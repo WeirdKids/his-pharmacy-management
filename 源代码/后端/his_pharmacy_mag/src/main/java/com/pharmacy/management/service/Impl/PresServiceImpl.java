@@ -10,13 +10,14 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Service
 public class PresServiceImpl implements PresService{
     @Autowired
     PrescriptionDao prescriptionDao;
 
     @Override
-    public List<Prescription> getByPresCode(String PresCode){
-        return prescriptionDao.findAllByPrescriptionCodeLike(PresCode);
+    public List<Prescription> getByPresCode(int PresCode){
+        return prescriptionDao.findAllByPrescriptionCode(PresCode);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class PresQueryResult {
         this.message = message;
     }
 
-    public List<Prescription> getDrugs() {
+    public List<Prescription> getPrescripitons() {
         return prescriptions;
     }
 

@@ -17,7 +17,7 @@ public interface DrugDao extends JpaRepository<Drug, Integer> {
 
     //通过 mnemonicCode 字段查询到对应的一行或几行，并返回给Drug列表
     List<Drug> findAllByMnemonicCodeLike(String mnemonicCode);
-
+    List<Drug> findAllById(int id);
     List<Drug> findAllByDrugsNameLike(String drugsName);
 
     @Query(value = "select * from drugs limit 50", nativeQuery = true)

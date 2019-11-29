@@ -44,10 +44,16 @@ const state = {
     saveRequire: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).saveRequire,
     currentPage: window.sessionStorage.getItem('drug' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).currentPage,
     pageSize: window.sessionStorage.getItem('drug' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).pageSize
+  },
+  prescription: {
+    prescriptionCode: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).prescriptionCode,
+    doctorID: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).doctorID,
+    chargeTime: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).chargeTime,
+    charger: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).charger,
+    statue: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).statue,
+    stage: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).stage,
+    num: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).num,
+    drugName: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).drugName
   }
-  //   {
-  //   num: window.sessionStorage.getItem('warehouses' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('warehouses' || '[]')).num,
-  //   warehouse: window.sessionStorage.getItem('warehouses' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('warehouses' || '[]')).warehouse
-  // }
 }
 export default state

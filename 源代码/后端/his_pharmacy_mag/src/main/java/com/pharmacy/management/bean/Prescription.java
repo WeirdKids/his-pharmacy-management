@@ -8,7 +8,7 @@ import java.util.Date;
 
 
 @Entity // @Entity 表示这是一个实体类
-@Table(name = "drugs") // @Table(name=“drugs”) 表示对应的表名是 drugs
+@Table(name = "prescriptions") // @Table(name=“drugs”) 表示对应的表名是 drugs
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer"})
 public class Prescription {
     @Id
@@ -22,11 +22,11 @@ public class Prescription {
     @Column(name = "doctorid")
     int doctorID;
 
-    @Column(name = "changetime")
-    Date changeTime;
+    @Column(name = "chargetime")
+    Date chargeTime;
 
     @Column(name = "charger")
-    String chargerName;
+    String charger;
 
 
     @Column(name="statue")
@@ -38,9 +38,8 @@ public class Prescription {
     @Column(name = "num")
     int num;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "drug_id")
-    Drug drug;
+   @Column(name = "drugname")
+    String drugName;
 
     public int getId(){return id;}
     public void setId(int id){this.id=id;}
@@ -51,11 +50,11 @@ public class Prescription {
     public int getPrescriptionCode(){return prescriptionCode;}
     public void setPrescriptionCode(int prescriptionCode){this.prescriptionCode=prescriptionCode;}
 
-    public Date getChangeTime(){return changeTime;}
-    public void setChangeTime(Date changeTime){this.changeTime=changeTime;}
+    public Date getChargeTime(){return chargeTime;}
+    public void setChargeTime(Date chargeTime){this.chargeTime=chargeTime;}
 
-    public String getChargerName(){return chargerName;}
-    public void setChargerName(String chargerName){this.chargerName=chargerName;}
+    public String getCharger(){return charger;}
+    public void setCharger(String charger){this.charger=charger;}
 
 
     public String getStatue(){return statue;}
@@ -67,9 +66,6 @@ public class Prescription {
     public int getNum(){return num;}
     public void setNum(int num){this.num=num;}
 
-    @JsonBackReference
-    public Drug getDrug(){return drug;}
-
-    @JsonBackReference
-    public void setDrug(Drug drug){this.drug=drug;}
+    public String getDrug(){return drugName;}
+    public void setDrug(String drugName){this.drugName=drugName;}
 }

@@ -15,4 +15,5 @@ public interface DrugService {
     public List<Drug> getByMnemonicCodeLike(String mnemonicCode);
     public List<Drug> getByDrugsNameLike(String DrugsName);
     public List<Drug> getAll();
+    public List<Drug> getById(int id);
 }

@@ -5,6 +5,7 @@ import com.pharmacy.management.bean.Prescription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import javax.xml.bind.annotation.XmlAnyAttribute;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ import java.util.List;
  */
 @Transactional // 执行修改方法时一定要添加这个注解和 @Modifying 注解
 public interface PrescriptionDao extends JpaRepository<Prescription, Integer> {
-    List<Prescription> findAllByPrescriptionCodeLike(String presCode);
+    List<Prescription> findAllByPrescriptionCode(int presCode);
 
-    @Query(value="select * from drugs limit 50", nativeQuery = true)
+    @Query(value="select * from prescriptions limit 50", nativeQuery = true)
     List<Prescription> returnAll();
 }
