@@ -18,6 +18,22 @@ Vue.prototype.$qs = qs
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+// 获取当前时间
+Vue.prototype.getNowFormatDate = function () {
+  var date = new Date()
+  var seperator1 = '-'
+  var year = date.getFullYear()
+  var month = date.getMonth() + 1
+  var strDate = date.getDate()
+  if (month >= 1 && month <= 9) {
+    month = '0' + month
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = '0' + strDate
+  }
+  var currentdate = year + seperator1 + month + seperator1 + strDate
+  return currentdate
+}
 
 router.beforeEach((to, from, next) => {
   // 判断访问的路径是否需要登录

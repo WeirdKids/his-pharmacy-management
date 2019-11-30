@@ -592,20 +592,24 @@ export default {
           }
         })
       } else {
+        let date = new Date()
+        date = this.getNowFormatDate()
         this.$refs.form.validate((valid) => {
           if (valid) {
             form.totalNum = parseInt(form.num1) + parseInt(form.num2)
             this.$axios
               .post('/addRepertory', {
-                drugsName: '',
-                drugsCode: '',
-                drugsDosageID: '',
-                drugsFormat: '',
-                drugsPrice: '0',
-                drugsTypeID: '',
-                drugsUnit: '',
-                saveRequire: '',
-                totalNum: '0',
+                drugsName: form.drugsName,
+                drugsCode: form.drugsCode,
+                drugsDosageID: form.drugsDosageID,
+                drugsFormat: form.drugsFormat,
+                mnemonicCode: form.mnemonicCode,
+                drugsPrice: form.drugsPrice,
+                drugsTypeID: form.drugsTypeID,
+                drugsUnit: form.drugsUnit,
+                creationDate: date,
+                saveRequire: form.saveRequire,
+                totalNum: form.totalNum,
                 warehouses: [
                   {
                     warehouse: '配药房',
@@ -616,6 +620,17 @@ export default {
                     num: parseInt(form.num2)
                   }
                 ]
+              })
+              .then((res) => {
+                this.$store.commit('repertory', res.data.drugs)
+                allData = res.data.drugs
+                this.tableData = res.data.drugs
+                this.total = this.tableData.length
+                this.tableChange()
+                this.$message.success(res.data.message)
+              })
+              .catch(failResponse => {
+                this.$message.error('服务器表示不想理你！')
               })
           }
         })

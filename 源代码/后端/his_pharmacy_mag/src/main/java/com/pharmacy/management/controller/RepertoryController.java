@@ -104,6 +104,17 @@ public class RepertoryController {
     }
 
     @CrossOrigin
+    @PostMapping(value = "/api/addRepertory")
+    @ResponseBody
+    @Transactional
+    public RepertoryResult addRepertory(@RequestBody Drug requestDrug) {
+        drugDao.save(requestDrug);
+        List<Drug> drugs = new ArrayList<>();
+        drugs = drugService.getAll();
+        return new RepertoryResult(200, "添加药品成功", drugs);
+    }
+
+    @CrossOrigin
     @PostMapping(value = "/api/deleteOptions")
     @ResponseBody
     public RepertoryResult deleteOptions(@RequestBody Map drugsOptions) {
