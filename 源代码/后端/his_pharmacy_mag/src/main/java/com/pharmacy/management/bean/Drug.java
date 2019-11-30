@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +44,15 @@ public class Drug implements Serializable {
     @Column(name = "drugsunit", nullable = false)
     private String drugsUnit;
 
-    @NotEmpty(message = "药品剂型不能为空")
+    @NotNull(message = "药品剂型不能为空")
     @Column(name = "drugsdosageid", nullable = false, length = 4)
     private int drugsDosageID;
 
-    @NotEmpty(message = "药品类型不能为空")
+    @NotNull(message = "药品类型不能为空")
     @Column(name = "drugstypeid", nullable = false, length = 4)
     private int drugsTypeID;
 
-    @NotEmpty(message = "药品单价不能为")
+    @NotNull(message = "药品单价不能为")
     @Column(name = "drugsprice", nullable = false, length = 5)
     private double drugsPrice;
 
@@ -59,7 +60,7 @@ public class Drug implements Serializable {
     @Column(name = "mnemoniccode", nullable = false)
     private String mnemonicCode;
 
-    @NotEmpty(message = "药品总数量不能为空")
+    @NotNull(message = "药品总数量不能为空")
     @Column(name = "totalnum", nullable = false, length = 5)
     private int totalNum;
 

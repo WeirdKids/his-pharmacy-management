@@ -132,7 +132,7 @@
 <script>
 let allData
 export default {
-  name: 'manage',
+  name: 'DrugsQuery',
   data () {
     const checkMnemonic = (rule, value, callback) => {
       if (value === '') {
@@ -212,6 +212,7 @@ export default {
       this.$axios.post('/query/drugs_query/queryAll')
         .then(res => {
           this.loading = false
+          console.log(res)
           _this.$store.commit('drug', res.data.drugs)
           allData = res.data.drugs
           _this.tableData = res.data.drugs

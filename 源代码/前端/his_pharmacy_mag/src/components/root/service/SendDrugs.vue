@@ -13,7 +13,7 @@
           <el-form-item prop="prescriptionCode" style="position: absolute;">
             <el-input
               name="prescriptionCode"
-              type="text"
+              type="number"
               v-model="formInline.prescriptionCode"
               placeholder="处方单号">
               <span slot="prefix">
@@ -55,6 +55,12 @@
         height="520"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
         >
+        <el-table-column
+          prop="id"
+          label="行号"
+          width="90px"
+          align="center">
+        </el-table-column>
         <el-table-column
           prop="prescriptionCode"
           label="处方单号"
@@ -110,7 +116,7 @@
           align="center"></el-table-column>
         <el-table-column
           prop="drugName"
-          label="保存条件"
+          label="药品名称"
           width="130px"
           align="center">
         </el-table-column>
@@ -119,12 +125,8 @@
             <el-button
               size="mini"
               type="success"
-              @click="handleEdit(scope.$index, scope.row)">发药
+              @click="handleSend(scope.$index, scope.row)">发药
             </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">退处方</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -148,9 +150,9 @@
 <script>
 let allData
 export default {
-  name: 'manage',
+  name: 'SendDrugs',
   data () {
-    const checkMnemonic = (rule, value, callback) => {
+    const checkPrescriptionCode = (rule, value, callback) => {
       if (value === '') {
         return callback(Error('请输入处方编号'))
       } else {
@@ -168,12 +170,11 @@ export default {
       },
       rules: {
         prescriptionCode: [
-          { validator: checkMnemonic, trigger: 'blur' }
+          { validator: checkPrescriptionCode, trigger: 'blur' }
         ]
       },
       // 动态数据
-      tableData: [],
-      multipleSelection: []
+      tableData: []
     }
   },
   methods: {
@@ -249,24 +250,43 @@ export default {
     tableChange () {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
     },
-    handleEdit (index, row) {
-      console.log(index, row)
-      // post("/send")
-    },
-    handleDelete (index, row) {
-      console.log(index, row)
+    handleSend (index, row) {
+      console.log(row.drugName)
+      this.$axios.post('/service/sendDrugs/send', {
+        id: row.id,
+        drugName: row.drugName,
+        num: row.num
+      })
+        .then(res => {
+          this.loading1 = false
+          console.log(res)
+          if (res.data.code === 200) {
+            this.$store.commit('prescription', res.data.prescriptions)
+            allData = res.data.prescriptions
+            this.tableData = res.data.prescriptions
+            this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('无法连接服务器')
+        })
     }
   },
   computed: {
-    repertories () {
-      return this.$store.state.repertories
+    prescriptions () {
+      return this.$store.state.prescriptions
     }
   },
   created () {
-    if (sessionStorage.getItem('repertory')) {
-      allData = this.$store.state.repertory
-      this.tableData = this.$store.state.repertory
-      this.total = this.tableData.length
+    if (sessionStorage.getItem('prescription')) {
+      allData = this.$store.state.prescription
+      this.tableData = this.$store.state.prescription
+      this.total = this.tableData.prescription
       this.tableChange()
     }
   }

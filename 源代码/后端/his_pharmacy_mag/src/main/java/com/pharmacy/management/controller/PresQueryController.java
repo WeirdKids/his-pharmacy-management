@@ -25,9 +25,9 @@ public class PresQueryController {
     @PostMapping(value = "/api/query/prescription_query/query")
     @ResponseBody
     public PresQueryResult query(@RequestBody Prescription requestPrescription){
-        int PrescriptionCode = requestPrescription.getPrescriptionCode();
+        int prescriptionCode = requestPrescription.getPrescriptionCode();
         List<Prescription> prescriptions = new ArrayList<>();
-        prescriptions = presService.getByPresCode(PrescriptionCode);
+        prescriptions = presService.getByPresCode(prescriptionCode);
         if (prescriptions.size() == 0) {
             return new PresQueryResult(400, "没有匹配数据", null);
         } else {
@@ -43,4 +43,5 @@ public class PresQueryController {
         prescriptions = presService.getAll();
         return new PresQueryResult(200, "操作执行成功", prescriptions);
     }
+
 }

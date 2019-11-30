@@ -46,6 +46,7 @@ const state = {
     pageSize: window.sessionStorage.getItem('drug' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).pageSize
   },
   prescription: {
+    id: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).id,
     prescriptionCode: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).prescriptionCode,
     doctorID: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).doctorID,
     chargeTime: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).chargeTime,

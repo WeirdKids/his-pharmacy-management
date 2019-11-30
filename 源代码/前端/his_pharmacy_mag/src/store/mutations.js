@@ -21,6 +21,7 @@ const mutations = {
     window.sessionStorage.setItem('drug', JSON.stringify((data)))
   },
   prescription (state, data) {
+    // console.log(data)
     state.prescription = data
     window.sessionStorage.setItem('prescription', JSON.stringify((data)))
   }

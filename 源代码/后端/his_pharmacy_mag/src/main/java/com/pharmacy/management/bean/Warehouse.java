@@ -7,6 +7,7 @@ import org.hibernate.annotations.JoinColumnsOrFormulas;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -24,7 +25,7 @@ public class Warehouse implements Serializable {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @NotEmpty(message = "当前存放地点的药品数量不能为空")
+    @NotNull(message = "当前存放地点的药品数量不能为空")
     @Column(name = "num", nullable = false, length = 5)
     private int num;
 
