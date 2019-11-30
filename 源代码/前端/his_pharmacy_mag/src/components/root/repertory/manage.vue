@@ -283,10 +283,28 @@
             </el-col>
           </el-row>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <span slot="footer" class="dialog-footer">
           <el-button @click="handleCancel" size="small" round>取消</el-button>
           <el-button type="primary" @click="dialogFormVisible = false, updateData(form)" size="small" round>确定</el-button>
-        </div>
+        </span>
+      </el-dialog>
+      <el-dialog
+        title="药品存放地点转移"
+        :visible.sync="dialogFormVisible1">
+        <el-form
+          :model="form1"
+          ref="form1"
+          label-width="80px">
+          <el-form-item label="转移地点" :label-width="formLabelWidth">
+            <el-select v-model="form1.warehouse" placeholder="-----" style="margin-right: 200px" value-key="id" @change="currentSel">
+              <el-option v-for="item in options" :key="item.id" :label="item.label" :value="item"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible1 = false" size="small" round>取消</el-button>
+          <el-button type="primary" @click="dialogFormVisible1 = false, updateWarehouse(form)" size="small" round>确定</el-button>
+        </span>
       </el-dialog>
     </template>
     <template>
@@ -307,6 +325,7 @@
 
 <script>
 let allData
+let saveWarehouse
 export default {
   name: 'manage',
   data () {
@@ -361,9 +380,26 @@ export default {
       currentPage: 1,
       pageSize: 5,
       dialogFormVisible: false,
+      dialogFormVisible1: false,
       readonly: true,
+      formLabelWidth: '220px',
       form: {
       },
+      form1: {
+
+      },
+      options: [
+        {
+          value: '选项1',
+          id: 1,
+          label: '配药房'
+        },
+        {
+          value: '选项2',
+          id: 2,
+          label: '储藏室'
+        }
+      ],
       formInline: {
         mnemonicCode: ''
       },
@@ -538,7 +574,7 @@ export default {
       }
     },
     handleEditAll () {
-
+      this.dialogFormVisible1 = true
     },
     handleCancel () {
       this.dialogFormVisible = false
@@ -553,6 +589,45 @@ export default {
         num1: '0',
         num2: '0'
       }
+    },
+    currentSel (sel) {
+      saveWarehouse = sel.label
+    },
+    updateWarehouse (form1) {
+      let ids = []
+      this.multipleSelection.forEach(element => {
+        ids.push(element.id)
+      })
+      this.$confirm('此操作将更改被选中的药品存放地点信息，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios.post('/updateWarehouse', {
+          ids: ids,
+          warehouse: saveWarehouse,
+          mnemonicCode: this.formInline.mnemonicCode
+        }).then((res) => {
+          this.$store.commit('repertory', res.data.drugs)
+          allData = res.data.drugs
+          this.tableData = res.data.drugs
+          this.total = this.tableData.length
+          // allData.splice(index, 1)
+          // this.tableData = allData
+          // this.total = allData.length
+          this.tableChange()
+          // 操作完成清除勾选框
+          this.$refs.multipleTable.clearSelection()
+          this.$message.success(res.data.message)
+        }).catch(() => {
+          this.$message.error('服务器表示不想理你！')
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '操作已取消'
+        })
+      })
     },
     // 单个修改
     updateData (form) {
@@ -671,6 +746,7 @@ export default {
         })
       })
     },
+    // 批量删除
     handleDeleteAll (multipleSelection) {
       let ids = []
       multipleSelection.forEach(element => {

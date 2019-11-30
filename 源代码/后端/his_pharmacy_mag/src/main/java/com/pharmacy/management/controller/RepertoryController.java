@@ -104,6 +104,38 @@ public class RepertoryController {
     }
 
     @CrossOrigin
+    @PostMapping(value = "/api/updateWarehouse")
+    @ResponseBody
+    @Transactional
+    public RepertoryResult updateWarehouse(@RequestBody Map drugsOptions) {
+        List<Integer> ids = new ArrayList<>();
+        ids = (List<Integer>) drugsOptions.get("ids");
+        String mnemonicCode = (String) drugsOptions.get("mnemonicCode");
+        String warehouse = (String) drugsOptions.get("warehouse");
+        System.out.println(ids);
+        System.out.println(mnemonicCode);
+        System.out.println(warehouse);
+        for (int id : ids) {
+            Drug drug = new Drug();
+            drug = drugService.getById(id);
+            int size = drug.getWarehouses().size();
+            if (size == 0) {
+                continue;
+            } else if (size == 1) {
+                drug.getWarehouses().get(0).setWarehouse(warehouse);
+            } else {
+                drug.getWarehouses().get(0).setNum(drug.getWarehouses().get(0).getNum() + drug.getWarehouses().get(1).getNum());
+                drug.getWarehouses().remove(1);
+                drug.getWarehouses().get(0).setWarehouse(warehouse);
+            }
+            drugDao.save(drug);
+        }
+        List<Drug> drugs = new ArrayList<>();
+        drugs = getDrugs(mnemonicCode);
+        return new RepertoryResult(200, "批量修改完成", drugs);
+    }
+
+    @CrossOrigin
     @PostMapping(value = "/api/addRepertory")
     @ResponseBody
     @Transactional
@@ -121,8 +153,6 @@ public class RepertoryController {
         List<Integer> ids = new ArrayList<>();
         ids = (List<Integer>) drugsOptions.get("ids");
         String mnemonicCode = (String) drugsOptions.get("mnemonicCode");
-        System.out.println(ids);
-        System.out.println(mnemonicCode);
         for (int id : ids) {
             drugService.deleteRepertory(id);
         }
