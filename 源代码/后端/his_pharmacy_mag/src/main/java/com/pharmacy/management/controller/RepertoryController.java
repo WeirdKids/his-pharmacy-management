@@ -1,7 +1,5 @@
 package com.pharmacy.management.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
 import com.pharmacy.management.dao.DrugDao;
@@ -95,9 +93,9 @@ public class RepertoryController {
             warehouses.get(1).setWarehouse(warehouses1.get(0).getWarehouse());
             warehouses.get(1).setNum(warehouses1.get(0).getNum());
         }
-        for (int i = 0; i < 2; i ++) {
-            if (warehouses.get(i).getNum() == 0) {
-                warehouses.remove(i);
+        for (int i = warehouses.size(); i > 0; i --) {
+            if (warehouses.get(i - 1).getNum() == 0) {
+                warehouses.remove(i - 1);
             }
         }
         drugDao.save(drug);

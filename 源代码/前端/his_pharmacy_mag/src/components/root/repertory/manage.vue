@@ -42,6 +42,14 @@
       </el-form-item>
       <el-form-item>
         <el-button
+          type="primary"
+          @click="addDrug(form)"
+          round
+          align="center"
+          icon="el-icon-plus">添加药品</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button
           type="danger"
           round
           :loading="loading2"
@@ -63,8 +71,9 @@
         <el-button
           type="primary"
           round
-          icon="el-icon-plus"
-          @click="handleImport">导入数据
+          @click="handleImport">
+          <svg-icon icon-class="import" style="color: white"></svg-icon>
+          导入药品数据
         </el-button>
       </el-form-item>
     </el-form>
@@ -198,42 +207,47 @@
           <el-form-item v-model="form.id"></el-form-item>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="药品编码">
-                <el-input v-model="form.drugsCode" autocomplete="off" readonly></el-input>
+              <el-form-item label="药品编码" prop="drugsCode">
+                <el-input v-model="form.drugsCode" autocomplete="off" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="药品名称">
-                <el-input v-model="form.drugsName" autocomplete="off" readonly></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="药品规格">
-                <el-input v-model="form.drugsFormat" autocomplete="off" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="保存条件">
-                <el-input v-model="form.saveRequire" autocomplete="off" readonly></el-input>
+              <el-form-item label="药品名称" prop="drugsName">
+                <el-input v-model="form.drugsName" autocomplete="off" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="药品单位">
-                <el-input v-model="form.drugsUnit" autocomplete="off" readonly></el-input>
+              <el-form-item label="助记码" prop="mnemonicCode">
+                <el-input v-model="form.mnemonicCode" autocomplete="off" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="药品剂型">
-                <el-input v-model="form.drugsDosageID" autocomplete="off" readonly></el-input>
+              <el-form-item label="药品规格" prop="drugsFormat">
+                <el-input v-model="form.drugsFormat" autocomplete="off" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="药品类型">
-                <el-input v-model="form.drugsTypeID" autocomplete="off" readonly></el-input>
+              <el-form-item label="保存条件" prop="saveRequire">
+                <el-input v-model="form.saveRequire" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="药品单位" prop="drugsUnit">
+                <el-input v-model="form.drugsUnit" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="药品剂型" prop="drugsDosageID">
+                <el-input v-model="form.drugsDosageID" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="药品类型" prop="drugsTypeID">
+                <el-input v-model="form.drugsTypeID" autocomplete="off" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -305,7 +319,7 @@ export default {
     }
     const isNumber = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('输入不可为空'))
+        return callback(new Error('输入不能为空'))
       } else {
         setTimeout(() => {
           const re = /^((0{1}\.\d{1,2})|([1-9]\d*\.{1}\d{1,2})|([1-9]+\d*)|0)$/
@@ -318,9 +332,16 @@ export default {
         }, 300)
       }
     }
-    const isInteger = (rule, value, callback) => {
+    const NotEmpty = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('输入不可为空'))
+        return callback(new Error('输入不能为空'))
+      } else {
+        callback()
+      }
+    }
+    const isInteger = (rule, value, callback) => {
+      if (value === '') {
+        return callback(new Error('输入不能为空'))
       }
       setTimeout(() => {
         const re = /^(0|[1-9][0-9]*)$/
@@ -340,19 +361,8 @@ export default {
       currentPage: 1,
       pageSize: 5,
       dialogFormVisible: false,
+      readonly: true,
       form: {
-        id: '',
-        drugsName: '',
-        drugsCode: '',
-        drugsDosageID: '',
-        drugsFormat: '',
-        drugsPrice: '',
-        drugsTypeID: '',
-        drugsUnit: '',
-        saveRequire: 0,
-        totalNum: 0,
-        num1: 0,
-        num2: 0
       },
       formInline: {
         mnemonicCode: ''
@@ -363,6 +373,30 @@ export default {
         ]
       },
       rules1: {
+        drugsCode: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        drugsName: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        drugsUnit: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        drugsTypeID: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        drugsDosageID: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        mnemonicCode: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        drugsFormat: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        saveRequire: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
         drugsPrice: [
           { type: 'number', validator: isNumber, trigger: 'change' }
         ],
@@ -486,9 +520,10 @@ export default {
       })
     },
     handleEdit (index, row) {
+      this.readonly = true
       this.form = {...row}
       this.$set(this.form, 'drugsPrice', row.drugsPrice)
-      // console.log(row.warehouses)
+      // // console.log(row.warehouses)
       let warehouses = row.warehouses
       if (warehouses.length === 2) {
         // this.$set 解决给输入框赋值后无法修改的问题
@@ -509,44 +544,82 @@ export default {
       this.dialogFormVisible = false
       this.$message.info('操作已取消')
     },
+    addDrug (form) {
+      this.readonly = false
+      this.dialogFormVisible = true
+      this.form = {
+        drugsPrice: '0',
+        totalNum: '0',
+        num1: '0',
+        num2: '0'
+      }
+    },
     // 单个修改
     updateData (form) {
-      this.$refs.form.validate((valid) => {
-        // 验证参数是否合法
-        if (valid) { // 合法
-          form.totalNum = parseInt(form.num1) + parseInt(form.num2)
-          this.$axios
-            .post('/updateRepertory', {
-              id: parseInt(form.id),
-              totalNum: form.totalNum,
-              drugsPrice: form.drugsPrice,
-              mnemonicCode: this.formInline.mnemonicCode,
-              warehouses: [
-                {
-                  warehouse: '配药房',
-                  num: parseInt(form.num1),
-                  drug_id: parseInt(form.id)
-                },
-                {
-                  warehouse: '储藏室',
-                  num: parseInt(form.num2),
-                  drug_id: parseInt(form.id)
-                }
-              ]
-            })
-            .then(res => {
-              this.$store.commit('repertory', res.data.drugs)
-              allData = res.data.drugs
-              this.tableData = res.data.drugs
-              this.total = this.tableData.length
-              this.tableChange()
-              this.$message.success(res.data.message)
-            })
-            .catch(failResponse => {
-              this.$message.error('服务器表示不想理你！')
-            })
-        }
-      })
+      if (this.readonly) {
+        this.$refs.form.validate((valid) => {
+          // 验证参数是否合法
+          if (valid) { // 合法
+            form.totalNum = parseInt(form.num1) + parseInt(form.num2)
+            this.$axios
+              .post('/updateRepertory', {
+                id: parseInt(form.id),
+                totalNum: form.totalNum,
+                drugsPrice: form.drugsPrice,
+                mnemonicCode: this.formInline.mnemonicCode,
+                warehouses: [
+                  {
+                    warehouse: '配药房',
+                    num: parseInt(form.num1)
+                  },
+                  {
+                    warehouse: '储藏室',
+                    num: parseInt(form.num2)
+                  }
+                ]
+              })
+              .then(res => {
+                this.$store.commit('repertory', res.data.drugs)
+                allData = res.data.drugs
+                this.tableData = res.data.drugs
+                this.total = this.tableData.length
+                this.tableChange()
+                this.$message.success(res.data.message)
+              })
+              .catch(failResponse => {
+                this.$message.error('服务器表示不想理你！')
+              })
+          }
+        })
+      } else {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            form.totalNum = parseInt(form.num1) + parseInt(form.num2)
+            this.$axios
+              .post('/addRepertory', {
+                drugsName: '',
+                drugsCode: '',
+                drugsDosageID: '',
+                drugsFormat: '',
+                drugsPrice: '0',
+                drugsTypeID: '',
+                drugsUnit: '',
+                saveRequire: '',
+                totalNum: '0',
+                warehouses: [
+                  {
+                    warehouse: '配药房',
+                    num: parseInt(form.num1)
+                  },
+                  {
+                    warehouse: '储藏室',
+                    num: parseInt(form.num2)
+                  }
+                ]
+              })
+          }
+        })
+      }
     },
     // 单个删除
     handleDelete (index, row) {
@@ -624,9 +697,6 @@ export default {
   computed: {
     repertory () {
       return this.$store.state.repertory
-    },
-    warehouses () {
-      return this.$store.state.warehouses
     }
   },
   created () {
