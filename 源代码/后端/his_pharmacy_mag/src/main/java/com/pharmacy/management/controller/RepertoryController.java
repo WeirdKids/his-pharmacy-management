@@ -1,5 +1,7 @@
 package com.pharmacy.management.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
 import com.pharmacy.management.dao.DrugDao;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class RepertoryController {
@@ -105,9 +108,18 @@ public class RepertoryController {
     @CrossOrigin
     @PostMapping(value = "/api/deleteOptions")
     @ResponseBody
-    public RepertoryResult deleteOptions(@RequestBody List<Drug> requestDrugs) {
-        System.out.println(requestDrugs);
-        return null;
+    public RepertoryResult deleteOptions(@RequestBody Map drugsOptions) {
+        List<Integer> ids = new ArrayList<>();
+        ids = (List<Integer>) drugsOptions.get("ids");
+        String mnemonicCode = (String) drugsOptions.get("mnemonicCode");
+        System.out.println(ids);
+        System.out.println(mnemonicCode);
+        for (int id : ids) {
+            drugService.deleteRepertory(id);
+        }
+        List<Drug> drugs = new ArrayList<>();
+        drugs = getDrugs(mnemonicCode);
+        return new RepertoryResult(200, "批量删除完成", drugs);
     }
 
     private List<Drug> getDrugs(String mnemonicCode) {

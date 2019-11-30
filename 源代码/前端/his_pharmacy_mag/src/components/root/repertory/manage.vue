@@ -46,7 +46,8 @@
           round
           :loading="loading2"
           icon="el-icon-delete"
-          @click="handleDeleteAll">批量删除
+          @click="handleDeleteAll(multipleSelection)"
+          :disabled="this.multipleSelection.length === 0">批量删除
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -54,7 +55,8 @@
           type="success"
           round
           icon="el-icon-edit"
-          @click="handleEditAll">批量修改
+          @click="handleEditAll(multipleSelection)"
+          :disabled="this.multipleSelection.length === 0">批量修改
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -581,31 +583,40 @@ export default {
         })
       })
     },
-    handleDeleteAll () {
-      if (this.multipleSelection.length === 0) {
-        this.$message.info('没有选中的数据，操作失败')
-      } else {
-        this.$confirm('此操作将永久删除选中的药品信息，是否继续？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$axios.post('/deleteOptions', this.$qs.stringify({
-            drugs: this.multipleSelection
-          }, { arrayFormat: 'indices' }))
-            .then(() => {
-              this.$message.success('批量删除成功！')
-            })
-            .catch(() => {
-              this.$message.error('服务器表示不想理你！')
-            })
+    handleDeleteAll (multipleSelection) {
+      let ids = []
+      multipleSelection.forEach(element => {
+        ids.push(element.id)
+      })
+      this.$confirm('此操作将永久删除被选中的药品信息，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios.post('/deleteOptions', {
+          ids: ids,
+          mnemonicCode: this.formInline.mnemonicCode
+        }).then((res) => {
+          this.$store.commit('repertory', res.data.drugs)
+          allData = res.data.drugs
+          this.tableData = res.data.drugs
+          this.total = this.tableData.length
+          // allData.splice(index, 1)
+          // this.tableData = allData
+          // this.total = allData.length
+          this.tableChange()
+          // 操作完成清除勾选框
+          this.$refs.multipleTable.clearSelection()
+          this.$message.success(res.data.message)
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          this.$message.error('服务器表示不想理你！')
         })
-      }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     handleImport () {
     }
