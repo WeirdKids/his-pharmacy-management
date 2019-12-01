@@ -44,4 +44,12 @@ public class PresQueryController {
         return new PresQueryResult(200, "操作执行成功", prescriptions);
     }
 
+    @CrossOrigin
+    @PostMapping(value = "api/query/prescription_query/querySent")
+    @ResponseBody
+    public PresQueryResult querySent(){
+        List<Prescription> prescriptions = new ArrayList<>();
+        prescriptions = presService.getSent();
+        return new PresQueryResult(200,"操作执行成功", prescriptions);
+    }
 }

@@ -28,4 +28,7 @@ public class PresServiceImpl implements PresService{
 
     @Override
     public void Update(Prescription prescription){prescriptionDao.save(prescription);}
+
+    @Override
+    public List<Prescription> getSent(){ return prescriptionDao.returnSent();}
 }

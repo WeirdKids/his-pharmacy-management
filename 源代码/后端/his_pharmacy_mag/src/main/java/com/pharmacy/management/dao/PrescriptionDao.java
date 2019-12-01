@@ -19,4 +19,6 @@ public interface PrescriptionDao extends JpaRepository<Prescription, Integer> {
     Prescription findAllById(int pres_id);
     @Query(value="select * from prescriptions limit 50", nativeQuery = true)
     List<Prescription> returnAll();
+    @Query(value="select * from prescriptions where statue not like '未发放'", nativeQuery = true)
+    List<Prescription> returnSent();
 }
