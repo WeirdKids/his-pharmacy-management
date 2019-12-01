@@ -43,6 +43,15 @@
               @click.native.prevent="queryAll">显示全部处方单信息
             </el-button>
           </el-form-item>
+          <el-form-item>
+            <el-button
+              type="success"
+              round
+              icon="el-icon-edit"
+              @click="handleSendAll(multipleSelection)"
+              :disabled="this.multipleSelection.length === 0">批量发药
+            </el-button>
+          </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -54,7 +63,9 @@
         tooltip-effect="dark"
         height="520"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
+        @selection-change="handleSelectionChange"
         >
+        <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
         <el-table-column
           prop="id"
           label="行号"
@@ -174,10 +185,44 @@ export default {
         ]
       },
       // 动态数据
-      tableData: []
+      tableData: [],
+      multipleSelection: []
     }
   },
   methods: {
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    handleSendAll (multipleSelection) {
+      let _this = this
+      this.loading1 = true
+      var arr = multipleSelection
+      console.log(arr)
+      this.$axios.post('service/sendDrugs/sendAll', {
+        prescripitonCode: arr.prescripitonCode,
+        id: arr.id,
+        drugName: arr.drugName,
+        num: arr.num
+      })
+        .then(res => {
+          this.loading1 = false
+          console.log(res)
+          if (res.data.code === 200) {
+            _this.$store.commit('prescription', res.data.prescriptions)
+            allData = res.data.prescriptions
+            _this.tableData = res.data.prescriptions
+            _this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('无法连接服务器')
+        })
+    },
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {

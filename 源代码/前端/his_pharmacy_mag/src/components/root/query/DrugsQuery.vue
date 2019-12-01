@@ -54,10 +54,7 @@
         tooltip-effect="dark"
         height="520"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
-        @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection" fixed>
-        </el-table-column>
+        >
         <el-table-column
           prop="drugsCode"
           label="药品编码"
@@ -161,15 +158,6 @@ export default {
     }
   },
   methods: {
-    toggleSelection (rows) {
-      if (rows) {
-        rows.forEach(function (row) {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
-    },
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {
