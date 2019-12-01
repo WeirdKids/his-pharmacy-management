@@ -131,6 +131,12 @@
           width="130px"
           align="center">
         </el-table-column>
+        <el-table-column
+          prop="drugId"
+          label="药品编号"
+          width="130px"
+          align="center">
+        </el-table-column>
         <el-table-column label="操作" fixed="right" width="150" align="center">
           <template slot-scope="scope">
             <el-button
@@ -197,16 +203,16 @@ export default {
       let _this = this
       this.loading1 = true
       var arr = multipleSelection
-      console.log(arr)
+      let presIds = []
+      for (var i = 0; i < arr.length; i++) {
+        presIds.push(arr[i].id)
+      }
       this.$axios.post('service/sendDrugs/sendAll', {
-        prescripitonCode: arr.prescripitonCode,
-        id: arr.id,
-        drugName: arr.drugName,
-        num: arr.num
+        presId: presIds
       })
         .then(res => {
           this.loading1 = false
-          console.log(res)
+          // console.log(res)
           if (res.data.code === 200) {
             _this.$store.commit('prescription', res.data.prescriptions)
             allData = res.data.prescriptions
@@ -299,7 +305,7 @@ export default {
       console.log(row.drugName)
       this.$axios.post('/service/sendDrugs/send', {
         id: row.id,
-        drugName: row.drugName,
+        drugId: row.drugId,
         num: row.num
       })
         .then(res => {

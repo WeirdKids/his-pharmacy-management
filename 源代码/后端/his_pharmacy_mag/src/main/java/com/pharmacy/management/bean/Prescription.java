@@ -47,6 +47,9 @@ public class Prescription {
    @Column(name = "drugname")
     String drugName;
 
+   @Column(name="drugid")
+   int drugId;
+
     public int getId(){return id;}
     public void setId(int id){this.id=id;}
 
@@ -80,4 +83,7 @@ public class Prescription {
 
     public String getDrugName(){return drugName;}
     public void setDrugName(String drugName){this.drugName=drugName;}
+
+    public int getDrugId(){return drugId;}
+    public void setDrugId(int drugId){this.drugId=drugId;}
 }

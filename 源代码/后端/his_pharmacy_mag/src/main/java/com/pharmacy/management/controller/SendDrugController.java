@@ -1,5 +1,6 @@
 package com.pharmacy.management.controller;
 import com.pharmacy.management.bean.Drug;
+import com.pharmacy.management.bean.PresInfo;
 import com.pharmacy.management.bean.Prescription;
 import com.pharmacy.management.bean.Warehouse;
 import com.pharmacy.management.result.SendDrugsResult;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SendDrugController {
@@ -45,33 +47,36 @@ public class SendDrugController {
     @CrossOrigin
     @PostMapping("/api/service/sendDrugs/sendAll")
     @ResponseBody
-    public SendDrugsResult sendAll(@RequestBody List<Prescription> pres){
-        //System.out.println(pres.get(0).getDrugName());
-        List<Prescription> prescripitons=pres;
-        int [] codeNum=new int[prescripitons.size()];
+    public SendDrugsResult sendAll(@RequestBody PresInfo presInfo){
+
+        List<Prescription> prescriptions = new ArrayList<>();
+        for(int i=0;i<presInfo.getPresId().length;i++){
+            prescriptions.add(presService.getByPresId(presInfo.getPresId()[i]));
+        }
+        int [] codeNum=new int[prescriptions.size()];
         int errorCount=0;
-        for(int i=0;i<prescripitons.size();i++)
-            codeNum[i]=sendMethod(prescripitons.get(i));
+        for(int i=0;i<prescriptions.size();i++)
+            codeNum[i]=sendMethod(prescriptions.get(i));
         for(int i=0,j=0;i<codeNum.length;i++)
             if(codeNum[i]!=200){ errorCount++; }//获取出错个数
         if(errorCount==0){
-            List<Prescription> prescriptions = presService.getAll();
-            return new SendDrugsResult(200, "发药成功", prescriptions);
+            List<Prescription> prescription = presService.getAll();
+            return new SendDrugsResult(200, "发药成功", prescription);
         }
         else {
-            List<Prescription> prescriptions = presService.getAll();
-            return new SendDrugsResult(200, "有"+errorCount+"条记录出现问题，请确认", prescriptions);
+            List<Prescription> prescription = presService.getAll();
+            return new SendDrugsResult(200, "有"+errorCount+"条记录出现问题，请确认", prescription);
         }
     }
 
     public int sendMethod(Prescription pres){
         int num=pres.getNum();
-        String drugName=pres.getDrugName();
+        int drugId=pres.getDrugId();
         int pres_id=pres.getId();
 
         //通过处方编号查询处方并修改其状态
         Prescription Prescription=presService.getByPresId(pres_id);
-        Drug drug= drugService.getByDrugsName(drugName);
+        Drug drug= drugService.getById(drugId);
         List<Warehouse> warehouses=drug.getWarehouses();
 
         int sendNum=num/Prescription.getTotalStage(); //当前发送数量等于发送总数量除以疗程数

@@ -56,7 +56,8 @@ const state = {
     currentStage: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).currentStage,
     num: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).num,
     sentNum: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).sentNum,
-    drugName: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).drugName
+    drugName: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).drugName,
+    drugId: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).drugId
   }
 }
 export default state
