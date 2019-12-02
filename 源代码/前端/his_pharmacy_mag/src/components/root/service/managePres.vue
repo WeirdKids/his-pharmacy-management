@@ -57,7 +57,7 @@
               type="success"
               round
               icon="el-icon-edit"
-              @click="handleAddPres(multipleSelection)"
+              @click="handleAddPres(item)"
               :disabled="this.multipleSelection.length === 0">新增处方信息
             </el-button>
           </el-form-item>
@@ -209,38 +209,58 @@ export default {
       this.multipleSelection = val
     },
     handleReturnAllPres (multipleSelection) {
-      let _this = this
-      this.loading1 = true
-      var arr = multipleSelection
-      let presIds = []
-      for (var i = 0; i < arr.length; i++) {
-        presIds.push(arr[i].id)
-      }
-      this.$axios.post('service/managePres/returnAllPres', {
-        presId: presIds
+      this.$confirm('此操作将永久删除该处方单，是否继续', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let _this = this
+        this.loading1 = true
+        var arr = multipleSelection
+        let presIds = []
+        for (var i = 0; i < arr.length; i++) {
+          presIds.push(arr[i].id)
+        }
+        this.$axios.post('service/managePres/returnAllPres', {
+          presId: presIds
+        })
+          .then(res => {
+            this.loading1 = false
+            // console.log(res)
+            if (res.data.code === 200) {
+              _this.$store.commit('prescription', res.data.prescriptions)
+              allData = res.data.prescriptions
+              _this.tableData = res.data.prescriptions
+              _this.total = this.tableData.length
+              this.tableChange()
+              this.$message.error(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+          .catch(failResponse => {
+            this.loading = false
+            this.$message.error('无法连接服务器')
+          })
       })
-        .then(res => {
-          this.loading1 = false
-          // console.log(res)
-          if (res.data.code === 200) {
-            _this.$store.commit('prescription', res.data.prescriptions)
-            allData = res.data.prescriptions
-            _this.tableData = res.data.prescriptions
-            _this.total = this.tableData.length
-            this.tableChange()
-            this.$message.error(res.data.message)
-          } else {
-            this.$message.error(res.data.message)
-          }
-        })
-        .catch(failResponse => {
-          this.loading = false
-          this.$message.error('无法连接服务器')
-        })
     },
-    // handleAddPres(){
-    //
-    // }
+    // handleAddPres (item) {
+    //   this.$refs.edit.dialogFormVisible = true
+    //   this.$refs.edit.form = {
+    //     id: item.id,
+    //     prescriptionCode: item.prescriptionCode,
+    //     doctorID: item.doctorID,
+    //     chargeTime: item.chargeTime,
+    //     charger: item.charger,
+    //     statue: item.statue,
+    //     totalStage: item.totalStage,
+    //     currentStage: item.currentStage,
+    //     num: item.num,
+    //     sentNum: item.sentNum,
+    //     drugName: item.drugName,
+    //     drugId: item.drugId
+    //   }
+    // },
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {
@@ -314,29 +334,35 @@ export default {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
     },
     handleReturn (index, row) {
-      this.$axios.post('/service/managePres/returnPres', {
-        id: row.id,
-        drugId: row.drugId,
-        num: row.sentNum
+      this.$confirm('此操作将永久删除该处方单，是否继续', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios.post('/service/managePres/returnPres', {
+          id: row.id,
+          drugId: row.drugId,
+          num: row.sentNum
+        })
+          .then(res => {
+            this.loading1 = false
+            console.log(res)
+            if (res.data.code === 200) {
+              this.$store.commit('prescription', res.data.prescriptions)
+              allData = res.data.prescriptions
+              this.tableData = res.data.prescriptions
+              this.total = this.tableData.length
+              this.tableChange()
+              this.$message.success(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+          .catch(failResponse => {
+            this.loading = false
+            this.$message.error('无法连接服务器')
+          })
       })
-        .then(res => {
-          this.loading1 = false
-          console.log(res)
-          if (res.data.code === 200) {
-            this.$store.commit('prescription', res.data.prescriptions)
-            allData = res.data.prescriptions
-            this.tableData = res.data.prescriptions
-            this.total = this.tableData.length
-            this.tableChange()
-            this.$message.success(res.data.message)
-          } else {
-            this.$message.error(res.data.message)
-          }
-        })
-        .catch(failResponse => {
-          this.loading = false
-          this.$message.error('无法连接服务器')
-        })
     }
   },
   computed: {
