@@ -5,7 +5,7 @@ import com.pharmacy.management.bean.Prescription;
 
 import java.util.List;
 
-public class SendDrugsResult {
+public class ServiceResult {
 
     private int code;
     // 反馈信息
@@ -13,7 +13,7 @@ public class SendDrugsResult {
     //处方单对象
     private List<Prescription> prescriptions;
 
-    public SendDrugsResult(int code, String message, List<Prescription> prescriptions) {
+    public ServiceResult(int code, String message, List<Prescription> prescriptions) {
         this.code = code;
         this.message = message;
         this.prescriptions=prescriptions;

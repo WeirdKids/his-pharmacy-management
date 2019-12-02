@@ -10,7 +10,7 @@ import RepertoryMag from '@/components/root/repertory/manage'
 import Stockout from '@/components/root/repertory/stockout'
 import Stock from '@/components/root/repertory/stock'
 import ReturnDrugs from '@/components/root/service/returnDrugs'
-import ReturnPres from '@/components/root/service/returnPres'
+import ManagePres from '@/components/root/service/managePres'
 import catalogMag from '@/components/root/catalog/manage'
 
 Vue.use(Router)
@@ -116,9 +116,9 @@ export default new Router({
           }
         },
         {
-          path: '/service/returnPres',
+          path: '/service/managePres',
           name: '退回处方信息',
-          component: ReturnPres,
+          component: ManagePres,
           meta: {
             requireAuth: true,
             keepAlive: true,

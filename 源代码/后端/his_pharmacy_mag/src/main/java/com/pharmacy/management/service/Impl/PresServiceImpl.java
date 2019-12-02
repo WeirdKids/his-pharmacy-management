@@ -31,4 +31,10 @@ public class PresServiceImpl implements PresService{
 
     @Override
     public List<Prescription> getSent(){ return prescriptionDao.returnSent();}
+
+    @Override
+    public List<Prescription> getNotSent(){return prescriptionDao.returnNotSent();}
+
+    @Override
+    public void DeleteById(int id){prescriptionDao.deleteById(id);}
 }

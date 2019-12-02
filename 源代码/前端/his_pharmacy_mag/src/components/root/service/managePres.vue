@@ -40,7 +40,7 @@
               round
               :loading="loading"
               icon="el-icon-search"
-              @click.native.prevent="querySent">显示已发药处方单信息
+              @click.native.prevent="queryNotSent">显示未发药处方单信息
             </el-button>
           </el-form-item>
           <el-form-item>
@@ -48,8 +48,17 @@
               type="success"
               round
               icon="el-icon-edit"
-              @click="handleReturnAll(multipleSelection)"
-              :disabled="this.multipleSelection.length === 0">批量退药
+              @click="handleReturnAllPres(multipleSelection)"
+              :disabled="this.multipleSelection.length === 0">批量退处方
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="success"
+              round
+              icon="el-icon-edit"
+              @click="handleAddPres(multipleSelection)"
+              :disabled="this.multipleSelection.length === 0">新增处方信息
             </el-button>
           </el-form-item>
         </el-col>
@@ -142,7 +151,7 @@
             <el-button
               size="mini"
               type="success"
-              @click="handleReturn(scope.$index, scope.row)">退药
+              @click="handleReturn(scope.$index, scope.row)">退处方
             </el-button>
           </template>
         </el-table-column>
@@ -167,7 +176,7 @@
 <script>
 let allData
 export default {
-  name: 'ReturnDrugs',
+  name: 'managePres',
   data () {
     const checkPrescriptionCode = (rule, value, callback) => {
       if (value === '') {
@@ -199,7 +208,7 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    handleReturnAll (multipleSelection) {
+    handleReturnAllPres (multipleSelection) {
       let _this = this
       this.loading1 = true
       var arr = multipleSelection
@@ -207,7 +216,7 @@ export default {
       for (var i = 0; i < arr.length; i++) {
         presIds.push(arr[i].id)
       }
-      this.$axios.post('service/returnDrugs/returnAllDrugs', {
+      this.$axios.post('service/managePres/returnAllPres', {
         presId: presIds
       })
         .then(res => {
@@ -219,7 +228,7 @@ export default {
             _this.tableData = res.data.prescriptions
             _this.total = this.tableData.length
             this.tableChange()
-            this.$message.success(res.data.message)
+            this.$message.error(res.data.message)
           } else {
             this.$message.error(res.data.message)
           }
@@ -229,6 +238,9 @@ export default {
           this.$message.error('无法连接服务器')
         })
     },
+    // handleAddPres(){
+    //
+    // }
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {
@@ -265,23 +277,18 @@ export default {
         }
       })
     },
-    querySent () {
+    queryNotSent () {
       this.loading = true
       let _this = this
-      this.$axios.post('/query/prescription_query/querySent')
+      this.$axios.post('/query/prescription_query/queryNotSent')
         .then(res => {
           this.loading = false
-          console.log(res)
-          if (res.data.code === 200) {
-            _this.$store.commit('repertory', res.data.prescriptions)
-            allData = res.data.prescriptions
-            _this.tableData = res.data.prescriptions
-            _this.total = this.tableData.length
-            this.tableChange()
-            this.$message.success(res.data.message)
-          } else {
-            this.$message.error(res.data.message)
-          }
+          _this.$store.commit('repertory', res.data.prescriptions)
+          allData = res.data.prescriptions
+          _this.tableData = res.data.prescriptions
+          _this.total = this.tableData.length
+          this.tableChange()
+          this.$message.success(res.data.message)
         })
         .catch(failResponse => {
           this.loading = false
@@ -307,34 +314,29 @@ export default {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
     },
     handleReturn (index, row) {
-      console.log(row.drugName)
-      if (row.statue === '未发放') {
-        this.$message.error('当前处方还未发药')
-      } else {
-        this.$axios.post('/service/returnDrugs/returnDrugs', {
-          id: row.id,
-          drugId: row.drugId,
-          num: row.sentNum
+      this.$axios.post('/service/managePres/returnPres', {
+        id: row.id,
+        drugId: row.drugId,
+        num: row.sentNum
+      })
+        .then(res => {
+          this.loading1 = false
+          console.log(res)
+          if (res.data.code === 200) {
+            this.$store.commit('prescription', res.data.prescriptions)
+            allData = res.data.prescriptions
+            this.tableData = res.data.prescriptions
+            this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
         })
-          .then(res => {
-            this.loading1 = false
-            console.log(res)
-            if (res.data.code === 200) {
-              this.$store.commit('prescription', res.data.prescriptions)
-              allData = res.data.prescriptions
-              this.tableData = res.data.prescriptions
-              this.total = this.tableData.length
-              this.tableChange()
-              this.$message.success(res.data.message)
-            } else {
-              this.$message.error(res.data.message)
-            }
-          })
-          .catch(failResponse => {
-            this.loading = false
-            this.$message.error('无法连接服务器')
-          })
-      }
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('无法连接服务器')
+        })
     }
   },
   computed: {

@@ -3,7 +3,7 @@ import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.PresInfo;
 import com.pharmacy.management.bean.Prescription;
 import com.pharmacy.management.bean.Warehouse;
-import com.pharmacy.management.result.SendDrugsResult;
+import com.pharmacy.management.result.ServiceResult;
 import com.pharmacy.management.service.DrugService;
 import com.pharmacy.management.service.PresService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,27 +26,27 @@ public class ServiceController {
     @CrossOrigin
     @PostMapping("/api/service/sendDrugs/send")//单个发药
     @ResponseBody
-    public SendDrugsResult send(@RequestBody Prescription pres){
+    public ServiceResult send(@RequestBody Prescription pres){
         int codeNum=sendMethod(pres);
         switch(codeNum) {
             case 400:
-                return new SendDrugsResult(400, "当前订单已发送完毕", null);
+                return new ServiceResult(400, "当前订单已发送完毕", null);
             case 401:
-                return new SendDrugsResult(401, "当前药品库存不足", null);
+                return new ServiceResult(401, "当前药品库存不足", null);
             case 402:
-            return new SendDrugsResult(402, "配药房数量不足！请先使用库存管理调取药品！", null);
+            return new ServiceResult(402, "配药房数量不足！请先使用库存管理调取药品！", null);
             case 200: {
                 List<Prescription> prescriptions = presService.getAll();
-                return new SendDrugsResult(200, "发药成功", prescriptions);
+                return new ServiceResult(200, "发药成功", prescriptions);
             }
         }
-        return new SendDrugsResult(403,"未知错误",null);
+        return new ServiceResult(403,"未知错误",null);
     }
 
     @CrossOrigin
     @PostMapping("/api/service/sendDrugs/sendAll")//批量发药
     @ResponseBody
-    public SendDrugsResult sendAll(@RequestBody PresInfo presInfo){
+    public ServiceResult sendAll(@RequestBody PresInfo presInfo){
 
         List<Prescription> prescriptions = new ArrayList<>();
         for(int i=0;i<presInfo.getPresId().length;i++){
@@ -60,18 +60,18 @@ public class ServiceController {
             if(codeNum[i]!=200){ errorCount++; }//获取出错个数
         if(errorCount==0){
             List<Prescription> prescription = presService.getAll();
-            return new SendDrugsResult(200, "操作执行成功", prescription);
+            return new ServiceResult(200, "操作执行成功", prescription);
         }
         else {
             List<Prescription> prescription = presService.getAll();
-            return new SendDrugsResult(200, "有"+errorCount+"条记录出现问题，请确认", prescription);
+            return new ServiceResult(200, "有"+errorCount+"条记录出现问题，请确认", prescription);
         }
     }
 
     @CrossOrigin
-    @PostMapping("/api/service/returnDrugs/returnAll") //批量退药
+    @PostMapping("/api/service/returnDrugs/returnAllDrugs") //批量退药
     @ResponseBody
-    public SendDrugsResult returnAll(@RequestBody PresInfo presInfo){
+    public ServiceResult returnAll(@RequestBody PresInfo presInfo){
         int errorCount=0;
         List<Prescription> prescriptions= new ArrayList<>();
         for(int i=0;i<presInfo.getPresId().length;i++){
@@ -79,34 +79,72 @@ public class ServiceController {
         }
         int [] codeNum=new int[prescriptions.size()];
         for(int i=0;i<prescriptions.size();i++)
-            codeNum[i]=returnMethod(prescriptions.get(i));
+            codeNum[i]=returnDrugMethod(prescriptions.get(i));
         for(int i=0,j=0;i<codeNum.length;i++)
             if(codeNum[i]!=200){ errorCount++; }//获取出错个数
         if(errorCount==0){
             List<Prescription> prescription = presService.getSent();
-            return new SendDrugsResult(200, "操作执行成功", prescription);
+            return new ServiceResult(200, "操作执行成功", prescription);
         }
         else {
             List<Prescription> prescription = presService.getSent();
-            return new SendDrugsResult(200, "有"+errorCount+"条记录出现问题，请确认", prescription);
+            return new ServiceResult(200, "有"+errorCount+"条记录出现问题，请确认", prescription);
         }
     }
 
     @CrossOrigin
-    @PostMapping("/api/service/returnDrugs/return") //单个退药
+    @PostMapping("/api/service/returnDrugs/returnDrugs") //单个退药
     @ResponseBody
-    public SendDrugsResult returnDrugs(@RequestBody Prescription pres){
-        int codeNum=returnMethod(pres);
+    public ServiceResult returnDrugs(@RequestBody Prescription pres){
+        int codeNum=returnDrugMethod(pres);
         if(codeNum==400)
-            return new SendDrugsResult(400,"当前药品还未发放",null);
+            return new ServiceResult(400,"当前药品还未发放",null);
         else {
             List<Prescription> prescriptions = presService.getSent();
-            return new SendDrugsResult(200, "操作执行成功", prescriptions);
+            return new ServiceResult(200, "操作执行成功", prescriptions);
         }
     }
 
-    public int returnMethod(Prescription pres){
-        int sentNum=pres.getSentNum();
+    @CrossOrigin
+    @PostMapping("api/service/managePres/returnPres")
+    @ResponseBody
+    public ServiceResult returnPres(@RequestBody Prescription pres){
+        returnPresMethod(pres);
+        List<Prescription> prescriptions=presService.getNotSent();
+        return new ServiceResult(200,"已删除处方订单",prescriptions);
+    }
+
+    @CrossOrigin
+    @PostMapping("api/service/managePres/returnAllPres")
+    @ResponseBody
+    public ServiceResult returnAllPres(@RequestBody PresInfo presInfo){
+
+        List<Prescription> prescriptions = new ArrayList<>();
+        for(int i=0;i<presInfo.getPresId().length;i++){
+            prescriptions.add(presService.getByPresId(presInfo.getPresId()[i]));
+        }
+        int count=prescriptions.size();
+        for(int i=0;i<count;i++)
+            returnPresMethod(prescriptions.get(i));
+        List<Prescription> prescriptions1=presService.getNotSent();
+        return new ServiceResult(200,"已删除"+count+"条处方订单",prescriptions1);
+    }
+
+    public void returnPresMethod(Prescription pres){
+        System.out.println("111");
+        int pres_id=pres.getId();
+        int drugId=pres.getDrugId();
+        int sentNum= pres.getSentNum();
+
+        Drug drug=drugService.getById(drugId);
+        List<Warehouse> warehouses=drug.getWarehouses();
+
+        warehouses.get(0).setNum(warehouses.get(0).getNum()+sentNum);//修改配药房中数量
+        drug.setTotalNum(drug.getTotalNum()+sentNum);//修改总表中数量
+        presService.DeleteById(pres_id);
+        drugService.Update(drug);
+    }
+    public int returnDrugMethod(Prescription pres){
         int drugId=pres.getDrugId();
         int pres_id=pres.getId();
 
@@ -114,7 +152,7 @@ public class ServiceController {
         Drug drug=drugService.getById(drugId);
         List<Warehouse> warehouses=drug.getWarehouses();
         int returnNum=prescription.getSentNum()/prescription.getCurrentStage();
-
+        System.out.println(returnNum);
         if(prescription.getStatue().equals("未发放")){
             return 400;
         }

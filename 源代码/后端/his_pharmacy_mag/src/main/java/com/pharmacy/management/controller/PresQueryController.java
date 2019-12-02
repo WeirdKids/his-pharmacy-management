@@ -50,6 +50,19 @@ public class PresQueryController {
     public PresQueryResult querySent(){
         List<Prescription> prescriptions = new ArrayList<>();
         prescriptions = presService.getSent();
-        return new PresQueryResult(200,"操作执行成功", prescriptions);
+        if(prescriptions.size() == 0)
+            return new PresQueryResult(400, "当前还未发放药品", null);
+        else return new PresQueryResult(200,"已显示发放过的处方", prescriptions);
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "api/query/prescription_query/queryNotSent")
+    @ResponseBody
+    public PresQueryResult queryNotSent(){
+        List<Prescription> prescriptions = new ArrayList<>();
+        prescriptions = presService.getNotSent();
+        if(prescriptions.size() == 0)
+            return new PresQueryResult(400, "当前处方订单已全部完成", null);
+        else return new PresQueryResult(200,"已显示未发放处方",prescriptions);
     }
 }

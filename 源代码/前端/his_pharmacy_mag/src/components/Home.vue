@@ -59,7 +59,7 @@
                 </template>
                 <el-menu-item index="/service/sendDrugs">配发药管理</el-menu-item>
                 <el-menu-item index="/service/returnDrugs">药品退回审核</el-menu-item>
-                <el-menu-item index="/service/returnPres">退回处方信息</el-menu-item>
+                <el-menu-item index="/service/managePres">处方信息管理</el-menu-item>
               </el-submenu>
               <el-submenu index="catalog">
                 <template slot="title">
