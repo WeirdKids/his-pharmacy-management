@@ -24,7 +24,7 @@ public class PresQueryController {
     @CrossOrigin
     @PostMapping(value = "/api/query/prescription_query/query")
     @ResponseBody
-    public PresQueryResult query(@RequestBody Prescription requestPrescription){
+    public PresQueryResult queryByCode(@RequestBody Prescription requestPrescription){
         int prescriptionCode = requestPrescription.getPrescriptionCode();
         List<Prescription> prescriptions = new ArrayList<>();
         prescriptions = presService.getByPresCode(prescriptionCode);

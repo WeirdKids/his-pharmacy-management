@@ -221,7 +221,7 @@ export default {
         for (var i = 0; i < arr.length; i++) {
           presIds.push(arr[i].id)
         }
-        this.$axios.post('service/managePres/returnAllPres', {
+        this.$axios.post('service/managePres/deleteAllPres', {
           presId: presIds
         })
           .then(res => {
@@ -339,7 +339,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$axios.post('/service/managePres/returnPres', {
+        this.$axios.post('/service/managePres/deletePres', {
           id: row.id,
           drugId: row.drugId,
           num: row.sentNum

@@ -26,7 +26,7 @@ public class ServiceController {
     @CrossOrigin
     @PostMapping("/api/service/sendDrugs/send")//单个发药
     @ResponseBody
-    public ServiceResult send(@RequestBody Prescription pres){
+    public ServiceResult sendDrugs(@RequestBody Prescription pres){
         int codeNum=sendMethod(pres);
         switch(codeNum) {
             case 400:
@@ -105,45 +105,7 @@ public class ServiceController {
         }
     }
 
-    @CrossOrigin
-    @PostMapping("api/service/managePres/returnPres")
-    @ResponseBody
-    public ServiceResult returnPres(@RequestBody Prescription pres){
-        returnPresMethod(pres);
-        List<Prescription> prescriptions=presService.getNotSent();
-        return new ServiceResult(200,"已删除处方订单",prescriptions);
-    }
 
-    @CrossOrigin
-    @PostMapping("api/service/managePres/returnAllPres")
-    @ResponseBody
-    public ServiceResult returnAllPres(@RequestBody PresInfo presInfo){
-
-        List<Prescription> prescriptions = new ArrayList<>();
-        for(int i=0;i<presInfo.getPresId().length;i++){
-            prescriptions.add(presService.getByPresId(presInfo.getPresId()[i]));
-        }
-        int count=prescriptions.size();
-        for(int i=0;i<count;i++)
-            returnPresMethod(prescriptions.get(i));
-        List<Prescription> prescriptions1=presService.getNotSent();
-        return new ServiceResult(200,"已删除"+count+"条处方订单",prescriptions1);
-    }
-
-    public void returnPresMethod(Prescription pres){
-        System.out.println("111");
-        int pres_id=pres.getId();
-        int drugId=pres.getDrugId();
-        int sentNum= pres.getSentNum();
-
-        Drug drug=drugService.getById(drugId);
-        List<Warehouse> warehouses=drug.getWarehouses();
-
-        warehouses.get(0).setNum(warehouses.get(0).getNum()+sentNum);//修改配药房中数量
-        drug.setTotalNum(drug.getTotalNum()+sentNum);//修改总表中数量
-        presService.DeleteById(pres_id);
-        drugService.Update(drug);
-    }
     public int returnDrugMethod(Prescription pres){
         int drugId=pres.getDrugId();
         int pres_id=pres.getId();
