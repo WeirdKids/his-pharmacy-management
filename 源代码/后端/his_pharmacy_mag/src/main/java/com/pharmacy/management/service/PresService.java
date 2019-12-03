@@ -6,10 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * @author 徐奥飞
- * date 2019-11-12 8:10
- */
 
 public interface PresService {
     public List<Prescription> getByPresCode(int PresCode);

@@ -54,12 +54,11 @@
           </el-form-item>
           <el-form-item>
             <el-button
-              type="success"
+              type="primary"
+              @click="addPres(form)"
               round
-              icon="el-icon-edit"
-              @click="handleAddPres(item)"
-              :disabled="this.multipleSelection.length === 0">新增处方信息
-            </el-button>
+              align="center"
+              icon="el-icon-plus">添加处方单</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -156,6 +155,57 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog
+        title="处方信息"
+        :visible.sync="dialogFormVisible">
+        <el-form
+          :model="form"
+          ref="form"
+          label-width="80px"
+          status-icon
+          :rules="rules1">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="处方编码" prop="prescriptionCode">
+                <el-input v-model="form.prescriptionCode" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="医生编码" prop="doctorID">
+                <el-input v-model="form.doctorID" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="开立医生" prop="charger">
+                <el-input v-model="form.charger" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="总疗程" prop="totalStage">
+                <el-input v-model="form.totalStage" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="药品编码" prop="drugId">
+                <el-input v-model="form.drugId" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="药品数量（每疗程）" prop="num1">
+                <el-input v-model="form.num1" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+              <el-button @click="handleCancel" size="small" round>取消</el-button>
+              <el-button type="primary" @click="dialogFormVisible = false, updateData(form)" size="small" round>确定</el-button>
+        </span>
+      </el-dialog>
     </template>
     <template>
       <div class="block">
@@ -185,18 +235,64 @@ export default {
         callback()
       }
     }
+    const NotEmpty = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('输入不能为空'))
+      } else {
+        callback()
+      }
+    }
+    const isInteger = (rule, value, callback) => {
+      if (value === '') {
+        return callback(new Error('输入不能为空'))
+      }
+      setTimeout(() => {
+        const re = /^(0|[1-9][0-9]*)$/
+        const reCheck = re.test(value)
+        if (!reCheck) {
+          return callback(new Error('请输入正整数2'))
+        } else {
+          callback()
+        }
+      }, 300)
+    }
     return {
       loading: false,
       loading1: false,
       total: 0,
+      dialogFormVisible: false,
+      readonly: true,
       currentPage: 1,
       pageSize: 5,
+      formLabelWidth: '220px',
+      form: {
+      },
       formInline: {
         prescriptionCode: ''
       },
       rules: {
         prescriptionCode: [
           { validator: checkPrescriptionCode, trigger: 'blur' }
+        ]
+      },
+      rules1: {
+        prescriptionCode: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        doctorID: [
+          { validator: NotEmpty, trigger: 'blur' }
+        ],
+        charger: [
+          { trigger: 'blur' }
+        ],
+        totalStage: [
+          { type: 'number', validator: isInteger, trigger: 'change' }
+        ],
+        drugId: [
+          { type: 'number', validator: isInteger, trigger: 'change' }
+        ],
+        num1: [
+          { type: 'number', validator: isInteger, trigger: 'change' }
         ]
       },
       // 动态数据
@@ -332,6 +428,48 @@ export default {
     },
     tableChange () {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+    },
+    addPres (form) {
+      this.readonly = false
+      this.dialogFormVisible = true
+      this.form = {
+        num: '0'
+      }
+    },
+    handleCancel () {
+      this.dialogFormVisible = false
+      this.$message.info('操作已取消')
+    },
+    updateData (form) {
+      let date = new Date()
+      date = this.getNowFormatDate()
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          form.num = parseInt(form.num1) * parseInt(form.totalStage)
+          this.$axios.post('service/managePres/addPres', {
+            prescriptionCode: form.prescriptionCode,
+            doctorID: form.doctorID,
+            charger: form.charger,
+            chargeTime: date,
+            totalStage: form.totalStage,
+            drugId: form.drugId,
+            num: form.num
+          })
+            .then(res => {
+              this.loading = false
+              this.$store.commit('repertory', res.data.prescriptions)
+              allData = res.data.prescriptions
+              this.tableData = res.data.prescriptions
+              this.total = this.tableData.length
+              this.tableChange()
+              this.$message.success(res.data.message)
+            })
+            .catch(failResponse => {
+              this.loading = false
+              this.$message.error('服务器被干掉了！')
+            })
+        }
+      })
     },
     handleReturn (index, row) {
       this.$confirm('此操作将永久删除该处方单，是否继续', '提示', {
