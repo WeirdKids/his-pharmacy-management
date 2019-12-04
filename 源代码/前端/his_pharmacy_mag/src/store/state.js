@@ -11,7 +11,7 @@ const state = {
     realName: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')).realName
   },
   repertory: {
-    // id: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).id,
+    id: window.sessionStorage.getItem('drugs' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drugs' || '[]')).id,
     drugsCode: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsCode,
     drugsName: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsName,
     drugsFormat: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).drugsFormat,
@@ -27,13 +27,11 @@ const state = {
         num: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).num,
         warehouse: window.sessionStorage.getItem('repertory' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).warehouse
       }
-    ],
-    currentPage: window.sessionStorage.getItem('repertory' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).currentPage,
-    pageSize: window.sessionStorage.getItem('repertory' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).pageSize
+    ]
+  },
+  repTable: {
+    pageSize: window.sessionStorage.getItem('repTable' || '[]') == null ? 5 : JSON.parse(window.sessionStorage.getItem('repTable' || '[]')).pageSize,
+    currentPage: window.sessionStorage.getItem('repTable' || '[]') == null ? 1 : JSON.parse(window.sessionStorage.getItem('repTable' || '[]')).currentPage
   }
-  //   {
-  //   num: window.sessionStorage.getItem('warehouses' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('warehouses' || '[]')).num,
-  //   warehouse: window.sessionStorage.getItem('warehouses' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('warehouses' || '[]')).warehouse
-  // }
 }
 export default state

@@ -1,9 +1,8 @@
 package com.pharmacy.management.service;
 
 import com.pharmacy.management.bean.Drug;
-import org.springframework.stereotype.Service;
+import com.pharmacy.management.bean.Warehouse;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -14,4 +13,7 @@ import java.util.List;
 public interface DrugService {
     public List<Drug> getByMnemonicCode(String mnemonicCode);
     public List<Drug> getAll();
+    public void deleteRepertory(int id);
+    public void updateRepertory(int id, double drugsPrice, int totalNum);
+    public Drug getById(int id);
 }

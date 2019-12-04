@@ -10,12 +10,19 @@ const mutations = {
   },
   logout () {
     window.sessionStorage.removeItem('user')
-    window.sessionStorage.removeItem('drugs')
+    window.sessionStorage.removeItem('repertory')
   },
   repertory (state, data) {
     state.repertory = data
     window.sessionStorage.setItem('repertory', JSON.stringify(data))
+  },
+  updatePageSize (state, data) {
+    state.repTable.pageSize = data
+    window.sessionStorage.setItem('repTable', JSON.stringify(state.repTable))
+  },
+  updateCurrentPage (state, data) {
+    state.repTable.currentPage = data
+    window.sessionStorage.setItem('repTable', JSON.stringify(state.repTable))
   }
 }
-
 export default mutations

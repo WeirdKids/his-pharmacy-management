@@ -2,12 +2,16 @@ package com.pharmacy.management.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author 徐奥飞
@@ -42,15 +46,18 @@ public class Drug implements Serializable {
     @Column(name = "drugsunit", nullable = false)
     private String drugsUnit;
 
-    @NotEmpty(message = "药品剂型不能为空")
+    @Column(name = "manufacturer")
+    private String manufacturer;
+
+    @NotNull(message = "药品剂型不能为空")
     @Column(name = "drugsdosageid", nullable = false, length = 4)
     private int drugsDosageID;
 
-    @NotEmpty(message = "药品类型不能为空")
+    @NotNull(message = "药品类型不能为空")
     @Column(name = "drugstypeid", nullable = false, length = 4)
     private int drugsTypeID;
 
-    @NotEmpty(message = "药品单价不能为")
+    @NotNull(message = "药品单价不能为空")
     @Column(name = "drugsprice", nullable = false, length = 5)
     private double drugsPrice;
 
@@ -58,7 +65,10 @@ public class Drug implements Serializable {
     @Column(name = "mnemoniccode", nullable = false)
     private String mnemonicCode;
 
-    @NotEmpty(message = "药品总数量不能为空")
+    @Column(name = "creationdate")
+    private Date creationDate;
+
+    @NotNull(message = "药品总数量不能为空")
     @Column(name = "totalnum", nullable = false, length = 5)
     private int totalNum;
 
@@ -70,8 +80,11 @@ public class Drug implements Serializable {
     // 当删除药品，会级联删除该药品的所有存放地点信息
     // 拥有 mappedBy 注解的实体类为关系被维护端
     // mappedBy = "drug" 中的 drug 是 Warehouse 中的 drug 属性
-    @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Warehouse> warehouses = new HashSet<Warehouse>(); // 存放地点列表
+    // 加上 mapperBy 代表 Drug 放弃维护外键关系
+    // orphanRemoval=true 配置表明删除无关联的数据。级联更新子结果集时此配置最关键
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Warehouse> warehouses = new ArrayList<>(); // 存放地点列表
 
     public Drug() {
         super();
@@ -117,6 +130,14 @@ public class Drug implements Serializable {
         this.drugsUnit = drugsUnit;
     }
 
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
     public int getDrugsDosageID() {
         return drugsDosageID;
     }
@@ -149,6 +170,14 @@ public class Drug implements Serializable {
         this.mnemonicCode = mnemonicCode;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public int getTotalNum() {
         return totalNum;
     }
@@ -168,12 +197,12 @@ public class Drug implements Serializable {
     // @JsonManagedReference 标注的属性在序列化时，会被序列化
     // 但在反序列化时，如果没有该 @JsonManagedReference，则不会自动注入 @JsonBackReference 标注的属性
     @JsonManagedReference
-    public Set<Warehouse> getWarehouses() {
+    public List<Warehouse> getWarehouses() {
         return warehouses;
     }
 
     @JsonManagedReference
-    public void setWarehouses(Set<Warehouse> warehouses) {
+    public void setWarehouses(List<Warehouse> warehouses) {
         this.warehouses = warehouses;
     }
 }
