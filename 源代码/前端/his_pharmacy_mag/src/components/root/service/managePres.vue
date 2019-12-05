@@ -40,7 +40,7 @@
               round
               :loading="loading"
               icon="el-icon-search"
-              @click.native.prevent="queryNotSent">显示未发药处方单信息
+              @click.native.prevent="queryAll">显示全部处方单信息
             </el-button>
           </el-form-item>
           <el-form-item>
@@ -395,10 +395,10 @@ export default {
         }
       })
     },
-    queryNotSent () {
+    queryAll () {
       this.loading = true
       let _this = this
-      this.$axios.post('/query/prescription_query/queryNotSent')
+      this.$axios.post('/query/prescription_query/queryAll')
         .then(res => {
           this.loading = false
           _this.$store.commit('repertory', res.data.prescriptions)
