@@ -1,4 +1,4 @@
-// 作者：徐奥飞
+﻿// 作者：徐奥飞
 // 时间：2019-11-12
 // 描述：定义了 state 数据的修改操作
 
@@ -23,6 +23,15 @@ const mutations = {
   updateCurrentPage (state, data) {
     state.repTable.currentPage = data
     window.sessionStorage.setItem('repTable', JSON.stringify(state.repTable))
+},
+  drug (state, data) {
+    state.drug = data
+    window.sessionStorage.setItem('drug', JSON.stringify((data)))
+  },
+  prescription (state, data) {
+    // console.log(data)
+    state.prescription = data
+    window.sessionStorage.setItem('prescription', JSON.stringify((data)))
   }
 }
 export default mutations

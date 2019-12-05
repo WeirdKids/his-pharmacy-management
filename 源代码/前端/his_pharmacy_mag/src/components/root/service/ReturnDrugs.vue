@@ -40,7 +40,16 @@
               round
               :loading="loading"
               icon="el-icon-search"
-              @click.native.prevent="queryAll">显示全部处方信息
+              @click.native.prevent="querySent">显示已发药处方单信息
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="success"
+              round
+              icon="el-icon-edit"
+              @click="handleReturnAll(multipleSelection)"
+              :disabled="this.multipleSelection.length === 0">批量退药
             </el-button>
           </el-form-item>
         </el-col>
@@ -48,13 +57,15 @@
     </el-form>
     <template>
       <el-table
-        ref="multipleTable"
+        ref="=Table"
         :data="tableData"
         :row-style="{height: 90 + 'px'}"
         tooltip-effect="dark"
         height="520"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
-        >
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
         <el-table-column
           prop="id"
           label="行号"
@@ -118,7 +129,23 @@
           prop="drugName"
           label="药品名称"
           width="130px"
-          align="center"></el-table-column>
+          align="center">
+        </el-table-column>
+        <el-table-column
+          prop="drugId"
+          label="药品编号"
+          width="130px"
+          align="center">
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" width="150" align="center">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleReturn(scope.$index, scope.row)">退药
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </template>
     <template>
@@ -140,11 +167,11 @@
 <script>
 let allData
 export default {
-  name: 'PresQuery',
+  name: 'ReturnDrugs',
   data () {
     const checkPrescriptionCode = (rule, value, callback) => {
       if (value === '') {
-        return callback(Error('请输入处方单号'))
+        return callback(Error('请输入处方编号'))
       } else {
         callback()
       }
@@ -164,10 +191,44 @@ export default {
         ]
       },
       // 动态数据
-      tableData: []
+      tableData: [],
+      multipleSelection: []
     }
   },
   methods: {
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    handleReturnAll (multipleSelection) {
+      let _this = this
+      this.loading1 = true
+      var arr = multipleSelection
+      let presIds = []
+      for (var i = 0; i < arr.length; i++) {
+        presIds.push(arr[i].id)
+      }
+      this.$axios.post('service/returnDrugs/returnAllDrugs', {
+        presId: presIds
+      })
+        .then(res => {
+          this.loading1 = false
+          // console.log(res)
+          if (res.data.code === 200) {
+            _this.$store.commit('prescription', res.data.prescriptions)
+            allData = res.data.prescriptions
+            _this.tableData = res.data.prescriptions
+            _this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('无法连接服务器')
+        })
+    },
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {
@@ -183,7 +244,6 @@ export default {
             .then(res => {
               this.loading1 = false
               if (res.data.code === 200) {
-                console.log(res)
                 _this.$store.commit('prescription', res.data.prescriptions)
                 allData = res.data.prescriptions
                 _this.tableData = res.data.prescriptions
@@ -205,17 +265,23 @@ export default {
         }
       })
     },
-    queryAll () {
+    querySent () {
       this.loading = true
-      this.$axios.post('/query/prescription_query/queryAll')
+      let _this = this
+      this.$axios.post('/query/prescription_query/querySent')
         .then(res => {
           this.loading = false
           console.log(res)
-          this.$store.commit('prescription', res.data.prescriptions)
-          allData = res.data.prescriptions
-          this.tableData = res.data.prescriptions
-          this.total = this.tableData.length
-          this.tableChange()
+          if (res.data.code === 200) {
+            _this.$store.commit('repertory', res.data.prescriptions)
+            allData = res.data.prescriptions
+            _this.tableData = res.data.prescriptions
+            _this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
         })
         .catch(failResponse => {
           this.loading = false
@@ -239,6 +305,36 @@ export default {
     },
     tableChange () {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+    },
+    handleReturn (index, row) {
+      console.log(row.drugName)
+      if (row.statue === '未发放') {
+        this.$message.error('当前处方还未发药')
+      } else {
+        this.$axios.post('/service/returnDrugs/returnDrugs', {
+          id: row.id,
+          drugId: row.drugId,
+          num: row.sentNum
+        })
+          .then(res => {
+            this.loading1 = false
+            console.log(res)
+            if (res.data.code === 200) {
+              this.$store.commit('prescription', res.data.prescriptions)
+              allData = res.data.prescriptions
+              this.tableData = res.data.prescriptions
+              this.total = this.tableData.length
+              this.tableChange()
+              this.$message.success(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+          .catch(failResponse => {
+            this.loading = false
+            this.$message.error('无法连接服务器')
+          })
+      }
     }
   },
   computed: {
@@ -250,7 +346,7 @@ export default {
     if (sessionStorage.getItem('prescription')) {
       allData = this.$store.state.prescription
       this.tableData = this.$store.state.prescription
-      this.total = this.tableData.length
+      this.total = this.tableData.prescription
       this.tableChange()
     }
   }

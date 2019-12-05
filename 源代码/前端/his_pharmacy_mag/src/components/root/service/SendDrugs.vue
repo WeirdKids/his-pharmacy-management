@@ -10,14 +10,14 @@
       size="mini">
       <el-row>
         <el-col :span="1">
-          <el-form-item prop="mnemonicCode" style="position: absolute;">
+          <el-form-item prop="prescriptionCode" style="position: absolute;">
             <el-input
-              name="mnemonicCode"
-              type="text"
-              v-model="formInline.mnemonicCode"
-              placeholder="药品助记码">
+              name="prescriptionCode"
+              type="number"
+              v-model="formInline.prescriptionCode"
+              placeholder="处方单号">
               <span slot="prefix">
-                <svg-icon icon-class="mnemonicCode" style="color: #409eff;"></svg-icon>
+                <svg-icon icon-class="prescriptionCode" style="color: #409eff;"></svg-icon>
               </span>
             </el-input>
           </el-form-item>
@@ -40,7 +40,16 @@
               round
               :loading="loading"
               icon="el-icon-search"
-              @click.native.prevent="queryAll">显示全部药品信息
+              @click.native.prevent="queryAll">显示全部处方单信息
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="success"
+              round
+              icon="el-icon-edit"
+              @click="handleSendAll(multipleSelection)"
+              :disabled="this.multipleSelection.length === 0">批量发药
             </el-button>
           </el-form-item>
         </el-col>
@@ -48,65 +57,94 @@
     </el-form>
     <template>
       <el-table
-        ref="multipleTable"
+        ref="=Table"
         :data="tableData"
         :row-style="{height: 90 + 'px'}"
         tooltip-effect="dark"
         height="520"
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
+        @selection-change="handleSelectionChange"
         >
+        <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
         <el-table-column
-          prop="drugsCode"
-          label="药品编码"
-          width="150px"
+          prop="id"
+          label="行号"
+          width="90px"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="drugsName"
-          label="名称"
+          prop="prescriptionCode"
+          label="处方单号"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="drugsFormat"
-          label="规格"
-          width="150px"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="drugsUnit"
-          label="单位"
+          prop="doctorID"
+          label="开立医生编号"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="drugsPrice"
-          label="单价"
+          prop="charger"
+          label="开立医生"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="drugsDosageID"
-          label="剂型"
+          prop="chargeTime"
+          label="开立时间"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="drugsTypeID"
-          label="类型"
+          prop="statue"
+          label="状态"
           width="130px"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="totalNum"
+          prop="totalStage"
+          label="总疗程"
+          width="130px"
+          align="center">
+        </el-table-column>
+        <el-table-column
+          prop="currentStage"
+          label="当前疗程"
+          width="130px"
+          align="center">
+        </el-table-column>
+        <el-table-column
+          prop="num"
           label="总数量"
+          width="130px"
+          align="center">
+        </el-table-column>
+        <el-table-column
+          prop="sentNum"
+          label="发送数量"
           width="130px"
           align="center"></el-table-column>
         <el-table-column
-          prop="saveRequire"
-          label="保存条件"
+          prop="drugName"
+          label="药品名称"
           width="130px"
           align="center">
+        </el-table-column>
+        <el-table-column
+          prop="drugId"
+          label="药品编号"
+          width="130px"
+          align="center">
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" width="150" align="center">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleSend(scope.$index, scope.row)">发药
+            </el-button>
+          </template>
         </el-table-column>
       </el-table>
     </template>
@@ -129,11 +167,11 @@
 <script>
 let allData
 export default {
-  name: 'DrugsQuery',
+  name: 'SendDrugs',
   data () {
-    const checkMnemonic = (rule, value, callback) => {
+    const checkPrescriptionCode = (rule, value, callback) => {
       if (value === '') {
-        return callback(Error('请输入药品助记码'))
+        return callback(Error('请输入处方编号'))
       } else {
         callback()
       }
@@ -145,11 +183,11 @@ export default {
       currentPage: 1,
       pageSize: 5,
       formInline: {
-        mnemonicCode: ''
+        prescriptionCode: ''
       },
       rules: {
-        mnemonicCode: [
-          { validator: checkMnemonic, trigger: 'blur' }
+        prescriptionCode: [
+          { validator: checkPrescriptionCode, trigger: 'blur' }
         ]
       },
       // 动态数据
@@ -158,6 +196,39 @@ export default {
     }
   },
   methods: {
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    handleSendAll (multipleSelection) {
+      let _this = this
+      this.loading1 = true
+      var arr = multipleSelection
+      let presIds = []
+      for (var i = 0; i < arr.length; i++) {
+        presIds.push(arr[i].id)
+      }
+      this.$axios.post('service/sendDrugs/sendAll', {
+        presId: presIds
+      })
+        .then(res => {
+          this.loading1 = false
+          // console.log(res)
+          if (res.data.code === 200) {
+            _this.$store.commit('prescription', res.data.prescriptions)
+            allData = res.data.prescriptions
+            _this.tableData = res.data.prescriptions
+            _this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('无法连接服务器')
+        })
+    },
     onSubmit () {
       let _this = this
       this.$refs.formInline.validate((valid) => {
@@ -166,16 +237,16 @@ export default {
           this.loading1 = true
           // 向后端发送数据
           this.$axios
-            .post('/query/drugs_query/query', {
-              mnemonicCode: this.formInline.mnemonicCode
+            .post('/query/prescription_query/query', {
+              prescriptionCode: this.formInline.prescriptionCode
             })
             // 收到后端返回的成功代码
             .then(res => {
               this.loading1 = false
               if (res.data.code === 200) {
-                _this.$store.commit('drug', res.data.drugs)
-                allData = res.data.drugs
-                _this.tableData = res.data.drugs
+                _this.$store.commit('prescription', res.data.prescriptions)
+                allData = res.data.prescriptions
+                _this.tableData = res.data.prescriptions
                 _this.total = this.tableData.length
                 this.tableChange()
                 this.$message.success(res.data.message)
@@ -197,13 +268,12 @@ export default {
     queryAll () {
       this.loading = true
       let _this = this
-      this.$axios.post('/query/drugs_query/queryAll')
+      this.$axios.post('/query/prescription_query/queryAll')
         .then(res => {
           this.loading = false
-          console.log(res)
-          _this.$store.commit('drug', res.data.drugs)
-          allData = res.data.drugs
-          _this.tableData = res.data.drugs
+          _this.$store.commit('repertory', res.data.prescriptions)
+          allData = res.data.prescriptions
+          _this.tableData = res.data.prescriptions
           _this.total = this.tableData.length
           this.tableChange()
           this.$message.success(res.data.message)
@@ -212,9 +282,6 @@ export default {
           this.loading = false
           this.$message.error('服务器被干掉了！')
         })
-    },
-    handleSelectionChange (val) {
-      this.multipleSelection = val
     },
     // 修改每页条数触发
     handleSizeChange (val) {
@@ -234,23 +301,43 @@ export default {
     tableChange () {
       this.tableData = allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
     },
-    handleEdit (index, row) {
-      console.log(index, row)
-    },
-    handleDelete (index, row) {
-      console.log(index, row)
+    handleSend (index, row) {
+      console.log(row.drugName)
+      this.$axios.post('/service/sendDrugs/send', {
+        id: row.id,
+        drugId: row.drugId,
+        num: row.num
+      })
+        .then(res => {
+          this.loading1 = false
+          console.log(res)
+          if (res.data.code === 200) {
+            this.$store.commit('prescription', res.data.prescriptions)
+            allData = res.data.prescriptions
+            this.tableData = res.data.prescriptions
+            this.total = this.tableData.length
+            this.tableChange()
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('无法连接服务器')
+        })
     }
   },
   computed: {
-    drugs () {
-      return this.$store.state.drugs
+    prescriptions () {
+      return this.$store.state.prescriptions
     }
   },
   created () {
-    if (sessionStorage.getItem('drug')) {
-      allData = this.$store.state.drug
-      this.tableData = this.$store.state.drug
-      this.total = this.tableData.length
+    if (sessionStorage.getItem('prescription')) {
+      allData = this.$store.state.prescription
+      this.tableData = this.$store.state.prescription
+      this.total = this.tableData.prescription
       this.tableChange()
     }
   }

@@ -1,4 +1,4 @@
-// 作者：徐奥飞
+﻿// 作者：徐奥飞
 // 时间：2019-11-12
 // 描述：相当于数据库，定义了数据的结构和初始值
 const state = {
@@ -32,6 +32,37 @@ const state = {
   repTable: {
     pageSize: window.sessionStorage.getItem('repTable' || '[]') == null ? 5 : JSON.parse(window.sessionStorage.getItem('repTable' || '[]')).pageSize,
     currentPage: window.sessionStorage.getItem('repTable' || '[]') == null ? 1 : JSON.parse(window.sessionStorage.getItem('repTable' || '[]')).currentPage
+    ],
+    currentPage: window.sessionStorage.getItem('repertory' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).currentPage,
+    pageSize: window.sessionStorage.getItem('repertory' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).pageSize
+  },
+  drug: {
+    drugsCode: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsCode,
+    drugsName: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsName,
+    drugsFormat: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsFormat,
+    drugsUnit: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsUnit,
+    drugsDosageID: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsDosageID,
+    drugsTypeID: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsTypeID,
+    drugsPrice: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsPrice,
+    mnemonicCode: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).mnemonicCode,
+    totalNum: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).totalNum,
+    saveRequire: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).saveRequire,
+    currentPage: window.sessionStorage.getItem('drug' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).currentPage,
+    pageSize: window.sessionStorage.getItem('drug' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).pageSize
+  },
+  prescription: {
+    id: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).id,
+    prescriptionCode: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).prescriptionCode,
+    doctorID: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).doctorID,
+    chargeTime: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).chargeTime,
+    charger: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).charger,
+    statue: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).statue,
+    totalStage: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).totalStage,
+    currentStage: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).currentStage,
+    num: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).num,
+    sentNum: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).sentNum,
+    drugName: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).drugName,
+    drugId: window.sessionStorage.getItem('prescription' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('prescription' || '[]')).drugId
   }
 }
 export default state

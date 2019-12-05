@@ -5,13 +5,12 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import PresQuery from '@/components/root/query/PresQuery'
 import DrugsQuery from '@/components/root/query/DrugsQuery'
-import PeiYao from '@/components/root/outpatient/peiyao'
-import FaYao from '@/components/root/outpatient/fayao'
+import SendDrugs from '@/components/root/service/sendDrugs'
 import RepertoryMag from '@/components/root/repertory/manage'
 import Stockout from '@/components/root/repertory/stockout'
 import Stock from '@/components/root/repertory/stock'
-import tuiYao from '@/components/root/outpatient/tuiyao'
-import tuiChuFang from '@/components/root/outpatient/tuichufang'
+import ReturnDrugs from '@/components/root/service/returnDrugs'
+import ManagePres from '@/components/root/service/managePres'
 import catalogMag from '@/components/root/catalog/manage'
 
 Vue.use(Router)
@@ -67,26 +66,6 @@ export default new Router({
           }
         },
         {
-          path: '/outpatient/peiYao',
-          name: '药房配药',
-          component: PeiYao,
-          meta: {
-            requireAuth: true,
-            keepAlive: true,
-            hidden: true
-          }
-        },
-        {
-          path: '/outpatient/faYao',
-          name: '药房发药',
-          component: FaYao,
-          meta: {
-            requireAuth: true,
-            keepAlive: true,
-            hidden: true
-          }
-        },
-        {
           path: '/repertory/manage',
           name: '库存管理',
           component: RepertoryMag,
@@ -117,9 +96,9 @@ export default new Router({
           }
         },
         {
-          path: '/yewu/prescription_query',
-          name: '查询复方单',
-          component: PresQuery,
+          path: '/service/sendDrugs',
+          name: '药房发药',
+          component: SendDrugs,
           meta: {
             requireAuth: true,
             keepAlive: true,
@@ -127,9 +106,9 @@ export default new Router({
           }
         },
         {
-          path: '/yeWu/tuiYao',
+          path: '/service/returnDrugs',
           name: '药品退回审核',
-          component: tuiYao,
+          component: ReturnDrugs,
           meta: {
             requireAuth: true,
             keepAlive: true,
@@ -137,9 +116,9 @@ export default new Router({
           }
         },
         {
-          path: '/yeWu/tuiChuFang',
+          path: '/service/managePres',
           name: '退回处方信息',
-          component: tuiChuFang,
+          component: ManagePres,
           meta: {
             requireAuth: true,
             keepAlive: true,

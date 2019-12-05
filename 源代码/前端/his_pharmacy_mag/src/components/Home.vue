@@ -43,14 +43,6 @@
                     <el-menu-item index="/query/drugs_query">药品信息查询</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
-              <el-submenu index="outpatient">
-                <template slot="title">
-                  <svg-icon icon-class="outpatient" class="svgInfo"></svg-icon>
-                  <span class="title">配药发药</span>
-                </template>
-                <el-menu-item index="/outpatient/peiYao">药房配药</el-menu-item>
-                <el-menu-item index="/outpatient/faYao">药房发药</el-menu-item>
-              </el-submenu>
               <el-submenu index="repertory">
                 <template slot="title">
                   <svg-icon icon-class="repertoryMag" class="svgInfo"></svg-icon>
@@ -60,14 +52,14 @@
                 <el-menu-item index="/repertory/stockOut">缺货信息</el-menu-item>
                 <el-menu-item index="/repertory/stock">进货信息</el-menu-item>
               </el-submenu>
-              <el-submenu index="yeWu">
+              <el-submenu index="service">
                 <template slot="title">
-                  <svg-icon icon-class="yeWu" class="svgInfo"></svg-icon>
+                  <svg-icon icon-class="service" class="svgInfo"></svg-icon>
                   <span class="title">门诊业务</span>
                 </template>
-                <el-menu-item index="/yewu/prescription_query">查询复方单</el-menu-item>
-                <el-menu-item index="/yeWu/tuiYao">药品退回审核</el-menu-item>
-                <el-menu-item index="/yeWu/tuiChuFang">退回处方信息</el-menu-item>
+                <el-menu-item index="/service/sendDrugs">配发药管理</el-menu-item>
+                <el-menu-item index="/service/returnDrugs">药品退回审核</el-menu-item>
+                <el-menu-item index="/service/managePres">处方信息管理</el-menu-item>
               </el-submenu>
               <el-submenu index="catalog">
                 <template slot="title">

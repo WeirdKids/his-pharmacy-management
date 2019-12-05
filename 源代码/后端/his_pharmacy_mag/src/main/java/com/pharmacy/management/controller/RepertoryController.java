@@ -1,4 +1,4 @@
-package com.pharmacy.management.controller;
+﻿package com.pharmacy.management.controller;
 
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 @Controller
 public class RepertoryController {

@@ -1,4 +1,4 @@
-package com.pharmacy.management.dao;
+﻿package com.pharmacy.management.dao;
 
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
@@ -16,13 +16,13 @@ import java.util.List;
  */
 @Transactional // 执行修改方法时一定要添加这个注解和 @Modifying 注解
 public interface DrugDao extends JpaRepository<Drug, Integer> {
-    // 根据药品助记码查询对应的药品信息
-//    List<Drug> findAllByMnemonicCode(String MnemonicCode);
-    List<Drug> findAllByMnemonicCodeLike(String MnemonicCode);
+    List<Drug> findAllByMnemonicCode(String MnemonicCode);
 
     Drug findById(int id);
 
-    // 查询所有的药品信息
+    Drug findAllById(int id);
+    Drug findAllByDrugsName(String drugsName);
+
     @Query(value = "select * from drugs limit 50", nativeQuery = true)
     List<Drug> returnAll();
     // 根据药品 id 实现单个删除

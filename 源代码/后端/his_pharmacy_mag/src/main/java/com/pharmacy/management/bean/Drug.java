@@ -1,4 +1,4 @@
-package com.pharmacy.management.bean;
+﻿package com.pharmacy.management.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -10,8 +10,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 
 /**
  * @author 徐奥飞
@@ -46,8 +49,10 @@ public class Drug implements Serializable {
     @Column(name = "drugsunit", nullable = false)
     private String drugsUnit;
 
+
     @Column(name = "manufacturer")
     private String manufacturer;
+
 
     @NotNull(message = "药品剂型不能为空")
     @Column(name = "drugsdosageid", nullable = false, length = 4)
@@ -65,8 +70,10 @@ public class Drug implements Serializable {
     @Column(name = "mnemoniccode", nullable = false)
     private String mnemonicCode;
 
+
     @Column(name = "creationdate")
     private Date creationDate;
+
 
     @NotNull(message = "药品总数量不能为空")
     @Column(name = "totalnum", nullable = false, length = 5)
@@ -82,6 +89,7 @@ public class Drug implements Serializable {
     // mappedBy = "drug" 中的 drug 是 Warehouse 中的 drug 属性
     // 加上 mapperBy 代表 Drug 放弃维护外键关系
     // orphanRemoval=true 配置表明删除无关联的数据。级联更新子结果集时此配置最关键
+
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Warehouse> warehouses = new ArrayList<>(); // 存放地点列表

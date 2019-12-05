@@ -1,4 +1,4 @@
-package com.pharmacy.management.service.Impl;
+﻿package com.pharmacy.management.service.Impl;
 
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
@@ -27,6 +27,9 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
+    public Drug getByDrugsName(String DrugsName){return drugDao.findAllByDrugsName(DrugsName);}
+
+    @Override
     public List<Drug> getAll() {
         return drugDao.returnAll();
     }
@@ -45,4 +48,8 @@ public class DrugServiceImpl implements DrugService {
     public Drug getById(int id) {
         return drugDao.findById(id);
     }
+
+    @Override
+    public void Update(Drug drug){drugDao.save(drug);}
+
 }
