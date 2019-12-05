@@ -45,20 +45,20 @@
           </el-form-item>
           <el-form-item>
             <el-button
+              type="primary"
+              @click="addPres(form)"
+              round
+              align="center"
+              icon="el-icon-plus">添加处方单</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button
               type="success"
               round
               icon="el-icon-edit"
               @click="handleReturnAllPres(multipleSelection)"
               :disabled="this.multipleSelection.length === 0">批量退处方
             </el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              type="primary"
-              @click="addPres(form)"
-              round
-              align="center"
-              icon="el-icon-plus">添加处方单</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -161,7 +161,7 @@
         <el-form
           :model="form"
           ref="form"
-          label-width="80px"
+          label-width="100px"
           status-icon
           :rules="rules1">
           <el-row>
@@ -171,34 +171,36 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="医生编码" prop="doctorID">
-                <el-input v-model="form.doctorID" autocomplete="off" :readonly="readonly"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="开立医生" prop="charger">
-                <el-input v-model="form.charger" autocomplete="off" :readonly="readonly"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="总疗程" prop="totalStage">
                 <el-input v-model="form.totalStage" autocomplete="off" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
+            <el-col :span="12">
+              <el-form-item label="开立医生" prop="charger">
+                <el-input v-model="form.charger" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="医生编码" prop="doctorID">
+                <el-input v-model="form.doctorID" autocomplete="off" :readonly="readonly"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
               <el-form-item label="药品编码" prop="drugId">
                 <el-input v-model="form.drugId" autocomplete="off" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="药品数量（每疗程）" prop="num1">
-                <el-input v-model="form.num1" autocomplete="off" :readonly="readonly"></el-input>
-              </el-form-item>
-            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+            <el-form-item label="药品数量（单次疗程）" prop="num1">
+              <el-input v-model="form.num1" autocomplete="off" :readonly="readonly"></el-input>
+            </el-form-item>
+          </el-col>
           </el-row>
         </el-form>
         <span slot="footer" class="dialog-footer">
