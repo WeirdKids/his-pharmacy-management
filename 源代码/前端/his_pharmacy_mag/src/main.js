@@ -9,6 +9,7 @@ import qs from 'qs'
 // 引入ElementUI
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
 // 设置反向代理，前端请求默认发送到 http://localhost:8088/api
 var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8088/api'

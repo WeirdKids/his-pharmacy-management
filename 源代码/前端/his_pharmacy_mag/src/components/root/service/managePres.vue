@@ -40,6 +40,15 @@
               round
               :loading="loading"
               icon="el-icon-search"
+              @click.native.prevent="export2Excel(tableData,multipleSelection)">导出处方单信息
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="primary"
+              round
+              :loading="loading"
+              icon="el-icon-search"
               @click.native.prevent="queryAll">显示全部处方单信息
             </el-button>
           </el-form-item>
@@ -503,6 +512,30 @@ export default {
             this.$message.error('无法连接服务器')
           })
       })
+    },
+    export2Excel (tableData, multipleSelection) {
+      let tableDatas = []
+      console.log(multipleSelection)
+      if (multipleSelection.length > 0) {
+        tableDatas = multipleSelection
+      } else {
+        tableDatas = tableData
+      }
+      console.log(tableDatas)
+      require.ensure([], () => {
+        // eslint-disable-next-line camelcase
+        const { export_json_to_excel } = require('@/excel/Export2Excel')
+        const tHeader = ['行号', '处方单号', '开立医生编号', '开立医生', '开立时间', '状态', '总疗程', '当前疗程', '总数量', '发送数量', '药品名称', '药品编号']
+        // 上面设置Excel的表格第一行的标题
+        const filterVal = ['id', 'prescriptionCode', 'doctorId', 'charger', 'chargeTime', 'statue', 'totalStage', 'currentStage', 'num', 'sentNum', 'drugName', 'drugId']
+        const list = tableDatas
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '处方单明细')
+        this.$message.success('已导出处方单')
+      })
+    },
+    formatJson (filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
     }
   },
   computed: {
