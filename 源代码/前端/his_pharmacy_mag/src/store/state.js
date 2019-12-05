@@ -32,9 +32,6 @@ const state = {
   repTable: {
     pageSize: window.sessionStorage.getItem('repTable' || '[]') == null ? 5 : JSON.parse(window.sessionStorage.getItem('repTable' || '[]')).pageSize,
     currentPage: window.sessionStorage.getItem('repTable' || '[]') == null ? 1 : JSON.parse(window.sessionStorage.getItem('repTable' || '[]')).currentPage
-    ],
-    currentPage: window.sessionStorage.getItem('repertory' || '[]') == null ? '1' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).currentPage,
-    pageSize: window.sessionStorage.getItem('repertory' || '[]') == null ? '5' : JSON.parse(window.sessionStorage.getItem('repertory' || '[]')).pageSize
   },
   drug: {
     drugsCode: window.sessionStorage.getItem('drug' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('drug' || '[]')).drugsCode,

@@ -1,4 +1,4 @@
-﻿package com.pharmacy.management.controller;
+package com.pharmacy.management.controller;
 
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
@@ -34,7 +34,7 @@ public class RepertoryController {
     public RepertoryResult query(@RequestBody Drug requestDrug) {
         String mnemonicCode = requestDrug.getMnemonicCode();
         List<Drug> drugs = new ArrayList<>();
-        drugs = drugService.getByMnemonicCode("%"+ mnemonicCode +"%");
+        drugs = drugService.getByMnemonicCodeLike("%"+ mnemonicCode +"%");
         if (drugs.size() == 0) {
             return new RepertoryResult(400, "没有匹配数据", null);
         } else {
@@ -167,7 +167,7 @@ public class RepertoryController {
         if (mnemonicCode.isEmpty()) {
             drugs = drugService.getAll();
         } else {
-            drugs = drugService.getByMnemonicCode("%"+ mnemonicCode +"%");
+            drugs = drugService.getByMnemonicCodeLike("%"+ mnemonicCode +"%");
         }
         return drugs;
     }

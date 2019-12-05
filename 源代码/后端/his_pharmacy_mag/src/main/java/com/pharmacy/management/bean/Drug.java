@@ -1,4 +1,4 @@
-﻿package com.pharmacy.management.bean;
+package com.pharmacy.management.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

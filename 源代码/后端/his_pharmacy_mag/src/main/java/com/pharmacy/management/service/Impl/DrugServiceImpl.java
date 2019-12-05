@@ -1,4 +1,4 @@
-﻿package com.pharmacy.management.service.Impl;
+package com.pharmacy.management.service.Impl;
 
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
@@ -22,7 +22,7 @@ public class DrugServiceImpl implements DrugService {
     DrugDao drugDao;
 
     @Override
-    public List<Drug> getByMnemonicCode(String mnemonicCode) {
+    public List<Drug> getByMnemonicCodeLike(String mnemonicCode) {
         return drugDao.findAllByMnemonicCodeLike(mnemonicCode);
     }
 

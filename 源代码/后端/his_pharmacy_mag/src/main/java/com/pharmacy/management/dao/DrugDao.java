@@ -1,4 +1,4 @@
-﻿package com.pharmacy.management.dao;
+package com.pharmacy.management.dao;
 
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.bean.Warehouse;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Transactional // 执行修改方法时一定要添加这个注解和 @Modifying 注解
 public interface DrugDao extends JpaRepository<Drug, Integer> {
-    List<Drug> findAllByMnemonicCode(String MnemonicCode);
+    List<Drug> findAllByMnemonicCodeLike(String MnemonicCode);
 
     Drug findById(int id);
 

@@ -250,7 +250,7 @@ export default {
         const re = /^(0|[1-9][0-9]*)$/
         const reCheck = re.test(value)
         if (!reCheck) {
-          return callback(new Error('请输入正整数2'))
+          return callback(new Error('请输入正整数'))
         } else {
           callback()
         }

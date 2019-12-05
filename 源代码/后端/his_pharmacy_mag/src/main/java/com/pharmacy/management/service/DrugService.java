@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public interface DrugService {
-    public List<Drug> getByMnemonicCode(String mnemonicCode);
+    public List<Drug> getByMnemonicCodeLike(String mnemonicCode);
     public Drug getByDrugsName(String DrugsName);
     public List<Drug> getAll();
     public void deleteRepertory(int id);

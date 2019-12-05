@@ -23,7 +23,7 @@ const mutations = {
   updateCurrentPage (state, data) {
     state.repTable.currentPage = data
     window.sessionStorage.setItem('repTable', JSON.stringify(state.repTable))
-},
+  },
   drug (state, data) {
     state.drug = data
     window.sessionStorage.setItem('drug', JSON.stringify((data)))

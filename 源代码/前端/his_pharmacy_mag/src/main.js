@@ -35,8 +35,6 @@ Vue.prototype.getNowFormatDate = function () {
   var currentdate = year + seperator1 + month + seperator1 + strDate
   return currentdate
 }
-
-
 router.beforeEach((to, from, next) => {
   // 判断访问的路径是否需要登录
   if (to.meta.requireAuth) { // 需要登录
