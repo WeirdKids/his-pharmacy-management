@@ -13,7 +13,7 @@
           <el-form-item prop="prescriptionCode" style="position: absolute;">
             <el-input
               name="prescriptionCode"
-              type="number"
+              type="text"
               v-model="formInline.prescriptionCode"
               placeholder="处方单号">
               <span slot="prefix">
@@ -22,7 +22,7 @@
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="10">
+        <el-col :span="12">
           <el-form-item>
             <el-button
               type="primary"
@@ -32,14 +32,27 @@
               icon="el-icon-search">查询
             </el-button>
           </el-form-item>
+          <el-form-item>
+            <input name="upload"
+                   type="file"
+                   @change="importfile(this)"
+                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            <el-button
+              type="primary"
+              round
+              :loading="loading"
+              icon="el-icon-download"
+              @click.native.prevent="updateByFile()">导入处方单信息
+            </el-button>
+          </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="10">
           <el-form-item>
             <el-button
               type="primary"
               round
               :loading="loading"
-              icon="el-icon-search"
+              icon="el-icon-download"
               @click.native.prevent="export2Excel(tableData,multipleSelection)">导出处方单信息
             </el-button>
           </el-form-item>
@@ -67,6 +80,15 @@
               icon="el-icon-edit"
               @click="handleReturnAllPres(multipleSelection)"
               :disabled="this.multipleSelection.length === 0">批量退处方
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="success"
+              round
+              icon="el-icon-edit"
+              @click="showPrintData(multipleSelection)"
+              :disabled="this.multipleSelection.length === 0">打印
             </el-button>
           </el-form-item>
         </el-col>
@@ -217,6 +239,15 @@
               <el-button type="primary" @click="dialogFormVisible = false, updateData(form)" size="small" round>确定</el-button>
         </span>
       </el-dialog>
+      <el-dialog :visible.sync="dialogFormVisible1">
+        <div ref="print" v-html="contentTxt">
+          { {contentTxt} }
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="handleCancel" size="small" round>取消</el-button>
+          <el-button type="primary" @click="dialogFormVisible1 = false, printData()" size="small" round>打印</el-button>
+        </div>
+      </el-dialog>
     </template>
     <template>
       <div class="block">
@@ -236,6 +267,7 @@
 
 <script>
 let allData
+var outDatas
 export default {
   name: 'managePres',
   data () {
@@ -271,39 +303,40 @@ export default {
       loading: false,
       loading1: false,
       total: 0,
+      contentTxt: '',
       dialogFormVisible: false,
+      dialogFormVisible1: false,
       readonly: true,
       currentPage: 1,
       pageSize: 5,
       formLabelWidth: '220px',
-      form: {
-      },
+      form: {},
       formInline: {
         prescriptionCode: ''
       },
       rules: {
         prescriptionCode: [
-          { validator: checkPrescriptionCode, trigger: 'blur' }
+          {validator: checkPrescriptionCode, trigger: 'blur'}
         ]
       },
       rules1: {
         prescriptionCode: [
-          { validator: NotEmpty, trigger: 'blur' }
+          {validator: NotEmpty, trigger: 'blur'}
         ],
         doctorID: [
-          { validator: NotEmpty, trigger: 'blur' }
+          {validator: NotEmpty, trigger: 'blur'}
         ],
         charger: [
-          { trigger: 'blur' }
+          {trigger: 'blur'}
         ],
         totalStage: [
-          { type: 'number', validator: isInteger, trigger: 'change' }
+          {type: 'number', validator: isInteger, trigger: 'change'}
         ],
         drugId: [
-          { type: 'number', validator: isInteger, trigger: 'change' }
+          {type: 'number', validator: isInteger, trigger: 'change'}
         ],
         num1: [
-          { type: 'number', validator: isInteger, trigger: 'change' }
+          {type: 'number', validator: isInteger, trigger: 'change'}
         ]
       },
       // 动态数据
@@ -314,6 +347,27 @@ export default {
   methods: {
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    showPrintData (multipleSelection) {
+      var arr = multipleSelection
+      let presIds = []
+      for (var i = 0; i < arr.length; i++) {
+        presIds.push(arr[i].id)
+      }
+      this.$axios.post('query/prescription_query/querySelected', {
+        presIds: presIds
+      })
+        .then(res => {
+          this.contentTxt = res.body.text
+          this.dialogFormVisible1 = true
+        })
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('无法连接服务器')
+        })
+    },
+    printData () {
+      this.$print(this.$refs.print)
     },
     handleReturnAllPres (multipleSelection) {
       this.$confirm('此操作将永久删除该处方单，是否继续', '提示', {
@@ -329,7 +383,7 @@ export default {
           presIds.push(arr[i].id)
         }
         this.$axios.post('service/managePres/deleteAllPres', {
-          presId: presIds
+          presIds: presIds
         })
           .then(res => {
             this.loading1 = false
@@ -524,8 +578,8 @@ export default {
       console.log(tableDatas)
       require.ensure([], () => {
         // eslint-disable-next-line camelcase
-        const { export_json_to_excel } = require('@/excel/Export2Excel')
-        const tHeader = ['行号', '处方单号', '开立医生编号', '开立医生', '开立时间', '状态', '总疗程', '当前疗程', '总数量', '发送数量', '药品名称', '药品编号']
+        const {export_json_to_excel} = require('@/excel/Export2Excel')
+        const tHeader = ['行号', '处方编号', '开立医生编号', '开立医生', '开立时间', '状态', '总疗程', '当前疗程', '发药总量', '已发数量', '药品名称', '药品编号']
         // 上面设置Excel的表格第一行的标题
         const filterVal = ['id', 'prescriptionCode', 'doctorId', 'charger', 'chargeTime', 'statue', 'totalStage', 'currentStage', 'num', 'sentNum', 'drugName', 'drugId']
         const list = tableDatas
@@ -536,24 +590,99 @@ export default {
     },
     formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    importfile (obj) {
+      // eslint-disable-next-line no-unused-vars
+      let _this = this
+      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxx')
+      // eslint-disable-next-line no-unused-vars
+      let inputDOM = this.$refs.inputer// 通过DOM取文件数据
+      this.file = event.currentTarget.files[0]
+      var rABS = false // 是否将文件读取为二进制字符串
+      var f = this.file
+      var reader = new FileReader()
+      // (!FileReader.prototype.readAsBinaryString) {
+      FileReader.prototype.readAsBinaryString = function (f) {
+        var binary = ''
+        var rABS = false // 是否将文件读取为二进制字符串
+        // eslint-disable-next-line no-unused-vars
+        var pt = this
+        var wb // 读取完成的数据
+        var outdata
+        var reader = new FileReader()
+        reader.onload = function (e) {
+          var bytes = new Uint8Array(reader.result)
+          var length = bytes.byteLength
+          for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i])
+          }
+          var XLSX = require('xlsx')
+          if (rABS) {
+            wb = XLSX.read(btoa(binary), {// 手动转化
+              type: 'base64'
+            })
+          } else {
+            wb = XLSX.read(binary, {
+              type: 'binary'
+            })
+          }
+          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])// outdata就是你想要的东
+          outDatas = outdata
+        }
+        reader.readAsArrayBuffer(f)
+      }
+      if (rABS) {
+        reader.readAsArrayBuffer(f)
+      } else {
+        reader.readAsBinaryString(f)
+      }
+    },
+    updateByFile () {
+      this.loading = true
+      console.log(outDatas.prescriptionCode)
+      this.$axios.post('service/managePres/addPresByFile', {
+        prescripitonCodes: outDatas.prescriptionCode,
+        doctorIDs: outDatas.doctorID,
+        chargers: outDatas.charger,
+        chargeTimes: this.getNowFormatDate(),
+        statues: outDatas.statue,
+        totalStages: outDatas.totalStage,
+        currentStages: outDatas.currentStage,
+        nums: outDatas.num,
+        sentNums: outDatas.sentNum,
+        drugNames: outDatas.drugName,
+        drugIds: outDatas.drugId
+      }).then(res => {
+        this.loading = false
+        this.$store.commit('repertory', res.data.prescriptions)
+        allData = res.data.prescriptions
+        this.tableData = res.data.prescriptions
+        this.total = this.tableData.length
+        this.tableChange()
+        this.$message.success(res.data.message)
+      })
+        .catch(failResponse => {
+          this.loading = false
+          this.$message.error('服务器被干掉了！')
+        })
+    },
+    computed: {
+      prescriptions () {
+        return this.$store.state.prescriptions
+      }
+    },
+    created () {
+      if (sessionStorage.getItem('prescription')) {
+        allData = this.$store.state.prescription
+        this.tableData = this.$store.state.prescription
+        this.total = this.tableData.prescription
+        this.tableChange()
+      }
     }
-  },
-  computed: {
-    prescriptions () {
-      return this.$store.state.prescriptions
-    }
-  },
-  created () {
-    if (sessionStorage.getItem('prescription')) {
-      allData = this.$store.state.prescription
-      this.tableData = this.$store.state.prescription
-      this.total = this.tableData.prescription
-      this.tableChange()
-    }
+    // activated () {
+    //   this.queryAll()
+    // }
   }
-  // activated () {
-  //   this.queryAll()
-  // }
 }
 </script>
 <style>

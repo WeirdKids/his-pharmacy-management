@@ -9,6 +9,7 @@ import qs from 'qs'
 // 引入ElementUI
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import Print from 'vue-print-nb'
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8088/api
 var axios = require('axios')
@@ -19,6 +20,7 @@ Vue.prototype.$qs = qs
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.use(Print)
 
 // 获取当前时间
 Vue.prototype.getNowFormatDate = function () {
