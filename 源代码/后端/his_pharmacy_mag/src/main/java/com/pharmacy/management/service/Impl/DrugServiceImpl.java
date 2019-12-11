@@ -1,7 +1,6 @@
 package com.pharmacy.management.service.Impl;
 
 import com.pharmacy.management.bean.Drug;
-import com.pharmacy.management.bean.Warehouse;
 import com.pharmacy.management.dao.DrugDao;
 import com.pharmacy.management.service.DrugService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +50,15 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public void Update(Drug drug){drugDao.save(drug);}
+
+    @Override
+    public List<String> getDrugsTypeId() {
+        return drugDao.getDrugsTypeId();
+    }
+
+    @Override
+    public List<String> getDrugsName(int drugsTypeID) {
+        return drugDao.getDrugsName(drugsTypeID);
+    }
 
 }

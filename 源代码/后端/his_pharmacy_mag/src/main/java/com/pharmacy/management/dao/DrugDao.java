@@ -31,4 +31,10 @@ public interface DrugDao extends JpaRepository<Drug, Integer> {
     @Modifying
     @Query(value = "update drugs set drugsPrice = :drugsPrice, totalNum = :totalNum where id = :id ", nativeQuery = true)
     void updateRepertory(@Param("id") int id, @Param("drugsPrice") double drugsPrice, @Param("totalNum") int totalNum);
+
+    @Query(value = "select distinct drugsTypeID from drugs", nativeQuery = true)
+    List<String> getDrugsTypeId();
+
+    @Query(value = "select drugsName from drugs where drugsTypeID = :drugsTypeID", nativeQuery = true)
+    List<String> getDrugsName(@Param("drugsTypeID") int drugsTypeID);
 }

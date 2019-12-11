@@ -54,7 +54,7 @@
               </el-submenu>
               <el-submenu index="service">
                 <template slot="title">
-                  <svg-icon icon-class="service" class="svgInfo"></svg-icon>
+                  <svg-icon icon-class="yeWu" class="svgInfo"></svg-icon>
                   <span class="title">门诊业务</span>
                 </template>
                 <el-menu-item index="/service/sendDrugs">配发药管理</el-menu-item>
