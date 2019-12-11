@@ -1,5 +1,6 @@
 package com.pharmacy.management.controller;
 
+import com.pharmacy.management.bean.PresInfo;
 import com.pharmacy.management.bean.Prescription;
 import com.pharmacy.management.bean.Drug;
 import com.pharmacy.management.result.PresQueryResult;
@@ -20,6 +21,19 @@ import java.util.List;
 public class PresQueryController {
     @Autowired
     PresService presService;
+
+
+    @CrossOrigin
+    @PostMapping(value = "/api/query/prescription_query/querySelected")
+    @ResponseBody
+    public PresQueryResult querySelected(@RequestBody PresInfo presInfo){
+        List<Prescription> prescriptions = new ArrayList<>();
+        for(int i=0;i<presInfo.getPresIds().length;i++){
+            prescriptions.add(presService.getByPresId(presInfo.getPresIds()[i]));
+        }
+        return new PresQueryResult(200,"",prescriptions);
+    }
+
 
     @CrossOrigin
     @PostMapping(value = "/api/query/prescription_query/query")

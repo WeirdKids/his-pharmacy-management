@@ -49,8 +49,8 @@ public class ServiceController {
     public ServiceResult sendAll(@RequestBody PresInfo presInfo){
 
         List<Prescription> prescriptions = new ArrayList<>();
-        for(int i=0;i<presInfo.getPresId().length;i++){
-            prescriptions.add(presService.getByPresId(presInfo.getPresId()[i]));
+        for(int i=0;i<presInfo.getPresIds().length;i++){
+            prescriptions.add(presService.getByPresId(presInfo.getPresIds()[i]));
         }
         int [] codeNum=new int[prescriptions.size()];
         int errorCount=0;
@@ -74,8 +74,8 @@ public class ServiceController {
     public ServiceResult returnAll(@RequestBody PresInfo presInfo){
         int errorCount=0;
         List<Prescription> prescriptions= new ArrayList<>();
-        for(int i=0;i<presInfo.getPresId().length;i++){
-            prescriptions.add(presService.getByPresId(presInfo.getPresId()[i]));
+        for(int i=0;i<presInfo.getPresIds().length;i++){
+            prescriptions.add(presService.getByPresId(presInfo.getPresIds()[i]));
         }
         int [] codeNum=new int[prescriptions.size()];
         for(int i=0;i<prescriptions.size();i++)

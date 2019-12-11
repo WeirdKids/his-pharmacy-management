@@ -13,7 +13,7 @@
           <el-form-item prop="prescriptionCode" style="position: absolute;">
             <el-input
               name="prescriptionCode"
-              type="number"
+              type="text"
               v-model="formInline.prescriptionCode"
               placeholder="处方单号">
               <span slot="prefix">
@@ -208,7 +208,7 @@ export default {
         presIds.push(arr[i].id)
       }
       this.$axios.post('service/sendDrugs/sendAll', {
-        presId: presIds
+        presIds: presIds
       })
         .then(res => {
           this.loading1 = false
