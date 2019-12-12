@@ -7,8 +7,6 @@ import PresQuery from '@/components/root/query/PresQuery'
 import DrugsQuery from '@/components/root/query/DrugsQuery'
 import SendDrugs from '@/components/root/service/sendDrugs'
 import RepertoryMag from '@/components/root/repertory/manage'
-import Stockout from '@/components/root/repertory/stockout'
-import Stock from '@/components/root/repertory/stock'
 import ReturnDrugs from '@/components/root/service/returnDrugs'
 import ManagePres from '@/components/root/service/managePres'
 import catalogMag from '@/components/root/catalog/manage'
@@ -69,26 +67,6 @@ export default new Router({
           path: '/repertory/manage',
           name: '库存管理',
           component: RepertoryMag,
-          meta: {
-            requireAuth: true,
-            keepAlive: true,
-            hidden: true
-          }
-        },
-        {
-          path: '/repertory/stockOut',
-          name: '缺货信息',
-          component: Stockout,
-          meta: {
-            requireAuth: true,
-            keepAlive: true,
-            hidden: true
-          }
-        },
-        {
-          path: '/repertory/stock',
-          name: '进货信息',
-          component: Stock,
           meta: {
             requireAuth: true,
             keepAlive: true,

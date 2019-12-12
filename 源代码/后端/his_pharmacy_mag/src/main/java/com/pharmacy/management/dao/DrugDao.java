@@ -35,6 +35,6 @@ public interface DrugDao extends JpaRepository<Drug, Integer> {
     @Query(value = "select distinct drugsTypeID from drugs", nativeQuery = true)
     List<String> getDrugsTypeId();
 
-    @Query(value = "select drugsName from drugs where drugsTypeID = :drugsTypeID", nativeQuery = true)
+    @Query(value = "select drugsName from drugs where drugsTypeID = :drugsTypeID limit 50", nativeQuery = true)
     List<String> getDrugsName(@Param("drugsTypeID") int drugsTypeID);
 }

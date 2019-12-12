@@ -11,6 +11,6 @@ import java.util.List;
 
 @Transactional
 public interface WarehouseDao extends JpaRepository<Warehouse, Integer> {
-
-
+    @Query(value = "select sum(num) from warehouses where warehouse = :warehouse", nativeQuery = true)
+    int getNum(@Param("warehouse") String warehouse);
 }

@@ -52,7 +52,6 @@ export default {
           id: parseInt(node.data.label)
         })
           .then(res => {
-            console.log(res.data)
             return resolve(res.data)
           })
           .catch(() => {

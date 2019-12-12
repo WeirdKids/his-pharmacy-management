@@ -49,8 +49,6 @@
                   <span class="title">库存管理</span>
                 </template>
                 <el-menu-item index="/repertory/manage">库存管理</el-menu-item>
-                <el-menu-item index="/repertory/stockOut">缺货信息</el-menu-item>
-                <el-menu-item index="/repertory/stock">进货信息</el-menu-item>
               </el-submenu>
               <el-submenu index="service">
                 <template slot="title">

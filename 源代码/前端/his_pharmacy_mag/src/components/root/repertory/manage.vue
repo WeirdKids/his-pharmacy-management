@@ -71,9 +71,25 @@
         <el-button
           type="primary"
           round
+          icon="el-icon-download"
           @click="handleImport">
-          <svg-icon icon-class="import" style="color: white"></svg-icon>
           导入药品数据
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          round
+          icon="el-icon-upload2"
+          @click.native.prevent="export2Excel(tableData,multipleSelection)">导出处方单信息
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          round
+          icon="el-icon-search"
+          @click="painting">库存信息
         </el-button>
       </el-form-item>
     </el-form>
@@ -306,6 +322,18 @@
           <el-button type="primary" @click="dialogFormVisible1 = false, updateWarehouse(form)" size="small" round>确定</el-button>
         </span>
       </el-dialog>
+      <el-dialog
+        title="库存信息饼状图"
+        :visible.sync="dialogFormVisible2">
+        <el-row>
+          <el-col :span="12">
+            <div id="pieReport" style="width: 400px; height: 300px;"></div>
+          </el-col>
+          <el-col :span="12">
+            <div id="pieReport1" style="width: 400px; height: 300px;"></div>
+          </el-col>
+        </el-row>
+      </el-dialog>
     </template>
     <template>
       <div class="block">
@@ -324,6 +352,7 @@
 </template>
 
 <script>
+import echarts from 'echarts'
 let allData
 let saveWarehouse
 export default {
@@ -381,6 +410,7 @@ export default {
       pageSize: 5,
       dialogFormVisible: false,
       dialogFormVisible1: false,
+      dialogFormVisible2: false,
       readonly: true,
       formLabelWidth: '220px',
       form: {
@@ -445,7 +475,11 @@ export default {
       },
       // 动态数据
       tableData: [],
-      multipleSelection: []
+      multipleSelection: [],
+      charts: '',
+      opinion: ['剩余容量', '已占用容量'],
+      opinionData: [],
+      opinionData1: []
     }
   },
   methods: {
@@ -783,6 +817,140 @@ export default {
       })
     },
     handleImport () {
+    },
+    export2Excel (tableData, multipleSelection) {
+      let tableDatas = []
+      // console.log(multipleSelection)
+      if (multipleSelection.length > 0) {
+        tableDatas = multipleSelection
+      } else {
+        tableDatas = tableData
+      }
+      console.log(tableDatas)
+      require.ensure([], () => {
+        // eslint-disable-next-line camelcase
+        const {export_json_to_excel} = require('@/excel/Export2Excel')
+        const tHeader = ['id', '药品编号', '药品名称', '药品助记码', '药品规格', '药品单位', '药品单价', '药品剂型', '药品类型', '药品总数量', '保存条件']
+        // 上面设置Excel的表格第一行的标题
+        const filterVal = ['id', 'drugsCode', 'drugsName', 'mnemonicCode', 'drugsFormat', 'drugsUnit', 'drugsPrice', 'drugsDosageID', 'drugsTypeID', 'totalNum', 'saveRequire']
+        const list = tableDatas
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '药品单明细')
+      })
+    },
+    formatJson (filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    painting () {
+      this.$axios.post('/getChart', {
+        warehouse: '储藏室'
+      })
+        .then(res => {
+          this.opinionData = res.data
+        })
+        .catch(() => {
+          this.$message('操作失败')
+        })
+      this.$axios.post('/getChart', {
+        warehouse: '配药房'
+      })
+        .then(res => {
+          this.opinionData1 = res.data
+          this.dialogFormVisible2 = true
+          this.$nextTick(function () {
+            this.drawPie('pieReport')
+            this.drawPie1('pieReport1')
+          })
+        })
+        .catch(() => {
+          this.$message('操作失败')
+        })
+    },
+    drawPie (id) {
+      this.charts = echarts.init(document.getElementById(id))
+      this.charts.setOption({
+        title: {
+          text: '储藏室'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          x: '60px',
+          data: this.opinion
+        },
+        series: [
+          {
+            name: '储藏室',
+            type: 'pie',
+            radius: ['20%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              normal: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                show: true,
+                textStyle: {
+                  fontSize: '30',
+                  fontWeight: 'blod'
+                }
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            data: this.opinionData
+          }
+        ]
+      })
+    },
+    drawPie1 (id) {
+      this.charts = echarts.init(document.getElementById(id))
+      this.charts.setOption({
+        title: {
+          text: '配药房'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          x: '60px',
+          data: this.opinion
+        },
+        series: [
+          {
+            name: '配药房',
+            type: 'pie',
+            radius: ['20%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              normal: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                show: true,
+                textStyle: {
+                  fontSize: '30',
+                  fontWeight: 'blod'
+                }
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            data: this.opinionData1
+          }
+        ]
+      })
     }
   },
   computed: {

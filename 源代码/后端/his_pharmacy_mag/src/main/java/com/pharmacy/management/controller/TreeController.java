@@ -30,7 +30,7 @@ public class TreeController {
             List<String> labels = drugService.getDrugsTypeId();
             Collections.sort(labels);
             for (String label : labels) {
-                TreeResult tree = new TreeResult(label, null);
+                TreeResult tree = new TreeResult(label);
                 trees.add(tree);
             }
         } else {
