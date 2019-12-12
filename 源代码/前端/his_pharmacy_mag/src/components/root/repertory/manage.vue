@@ -92,6 +92,15 @@
           @click="painting">库存信息
         </el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button
+          type="success"
+          round
+          icon="el-icon-printer"
+          @click="showPrintData(multipleSelection)"
+          :disabled="this.multipleSelection.length === 0">打印
+        </el-button>
+      </el-form-item>
     </el-form>
     <template>
       <el-table
@@ -334,6 +343,47 @@
           </el-col>
         </el-row>
       </el-dialog>
+      <el-dialog
+        title="药品信息单"
+        :close-on-click-modal="false"
+        :visible.sync="printDialogVisible"
+        width="60%">
+        <el-button
+          type="success"
+          round
+          size="small"
+          style="margin-right: 100%"
+          v-print="'#printTest'"
+          icon="el-icon-printer">打印</el-button>
+        <div id="printTest">
+          <div style="font-size: 22px;padding-bottom:10px;font-weight:800;font-family:宋体; text-align:center">药品信息</div>
+          <span style="font-size:16px;font-family:宋体;float:right;">打印时间：{{ getDate }}</span>
+          <table>
+            <thead>
+            <th>药品编号</th>
+            <th>药品名称</th>
+            <th>药品规格</th>
+            <th>药品单价</th>
+            <th>药品总数量</th>
+            <th>保存条件</th>
+            <th>配药房</th>
+            <th>储存室</th>
+            </thead>
+            <tbody>
+            <tr v-for="item in multipleSelection" :key="item.id">
+              <td>{{ item.drugsCode }}</td>
+              <td>{{ item.drugsName }}</td>
+              <td>{{ item.drugsFormat }}</td>
+              <td>{{ item.drugsPrice }}</td>
+              <td>{{ item.totalNum }}</td>
+              <td>{{ item.saveRequire }}</td>
+              <td>{{ item.warehouses[0].warehouse === '配药房' ? item.warehouses[0].num : item.warehouses[1].num }}</td>
+              <td>{{ item.warehouses[0].warehouse === '储藏室' ? item.warehouses[0].num : item.warehouses[1].num }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </el-dialog>
     </template>
     <template>
       <div class="block">
@@ -411,6 +461,7 @@ export default {
       dialogFormVisible: false,
       dialogFormVisible1: false,
       dialogFormVisible2: false,
+      printDialogVisible: false,
       readonly: true,
       formLabelWidth: '220px',
       form: {
@@ -951,11 +1002,17 @@ export default {
           }
         ]
       })
+    },
+    showPrintData (multipleSelection) {
+      this.printDialogVisible = true
     }
   },
   computed: {
     repertory () {
       return this.$store.state.repertory
+    },
+    getDate () {
+      return this.getNowFormatDate()
     }
   },
   created () {
@@ -971,4 +1028,27 @@ export default {
 }
 </script>
 <style>
+  #printTest table{
+    font-family:"宋体";
+    border-collapse:collapse;
+    width:99.5%;
+  }
+  #printTest table thead th{
+    height: 40px;
+    font-size: 13px;
+    /* width: 10px; */
+    text-align: center;
+    border: 1px solid black;
+  }
+  #printTest table tbody tr{
+    font-size:13px;
+    border: 1px solid black;
+    height: 40px;
+    text-align: center;
+  }
+  #printTest table tbody td{
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid black;
+  }
 </style>
