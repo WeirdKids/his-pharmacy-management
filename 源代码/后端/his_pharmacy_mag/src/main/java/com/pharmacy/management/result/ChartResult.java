@@ -1,8 +1,8 @@
 package com.pharmacy.management.result;
 
 public class ChartResult {
-    int value;
-    String name;
+    private int value;
+    private String name;
 
     public ChartResult(int value, String name) {
         this.value = value;

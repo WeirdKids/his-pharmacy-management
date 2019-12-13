@@ -67,12 +67,6 @@
       >
         <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
         <el-table-column
-          prop="id"
-          label="行号"
-          width="90px"
-          align="center">
-        </el-table-column>
-        <el-table-column
           prop="prescriptionCode"
           label="处方单号"
           width="130px"

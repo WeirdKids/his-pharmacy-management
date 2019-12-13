@@ -893,25 +893,16 @@ export default {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
     painting () {
-      this.$axios.post('/getChart', {
-        warehouse: '储藏室'
-      })
+      this.$axios.post('/getChart')
         .then(res => {
-          this.opinionData = res.data
-        })
-        .catch(() => {
-          this.$message('操作失败')
-        })
-      this.$axios.post('/getChart', {
-        warehouse: '配药房'
-      })
-        .then(res => {
-          this.opinionData1 = res.data
+          this.opinionData = res.data.result1
+          this.opinionData1 = res.data.result2
           this.dialogFormVisible2 = true
           this.$nextTick(function () {
             this.drawPie('pieReport')
             this.drawPie1('pieReport1')
           })
+          console.log(res.data)
         })
         .catch(() => {
           this.$message('操作失败')

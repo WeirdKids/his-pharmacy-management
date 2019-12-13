@@ -86,7 +86,7 @@
             <el-button
               type="success"
               round
-              icon="el-icon-edit"
+              icon="el-icon-printer"
               @click="showPrintData(multipleSelection)"
               :disabled="this.multipleSelection.length === 0">打印
             </el-button>
@@ -104,13 +104,7 @@
         style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
-        <el-table-column
-          prop="id"
-          label="行号"
-          width="90px"
-          align="center">
-        </el-table-column>
+        <el-table-column type="selection" fixed="left" width="50px" v-model="multipleSelection"></el-table-column>
         <el-table-column
           prop="prescriptionCode"
           label="处方单号"
@@ -239,13 +233,45 @@
               <el-button type="primary" @click="dialogFormVisible = false, updateData(form)" size="small" round>确定</el-button>
         </span>
       </el-dialog>
-      <el-dialog :visible.sync="dialogFormVisible1">
-        <div ref="print" v-html="contentTxt">
-          { {contentTxt} }
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="handleCancel" size="small" round>取消</el-button>
-          <el-button type="primary" @click="dialogFormVisible1 = false, printData()" size="small" round>打印</el-button>
+      <el-dialog
+        title="处方信息单"
+        :close-on-click-modal="false"
+        :visible.sync="printDialogVisible"
+        width="60%">
+        <el-button
+          type="success"
+          round
+          size="small"
+          style="margin-right: 100%"
+          v-print="'#printTest'"
+          icon="el-icon-printer">打印</el-button>
+        <div id="printTest">
+          <div style="font-size: 22px;padding-bottom:10px;font-weight:800;font-family:宋体; text-align:center">处方信息</div>
+          <span style="font-size:16px;font-family:宋体;float:right;">打印时间：{{ getDate }}</span>
+          <table>
+            <thead>
+            <th>处方单号</th>
+            <th>开立医生</th>
+            <th>开立时间</th>
+            <th>状态</th>
+            <th>总疗程</th>
+            <th>当前疗程</th>
+            <th>总数量</th>
+            <th>药品名称</th>
+            </thead>
+            <tbody>
+            <tr v-for="item in multipleSelection" :key="item.id">
+              <td>{{ item.prescriptionCode }}</td>
+              <td>{{ item.charger}}</td>
+              <td>{{ item.chargeTime }}</td>
+              <td>{{ item.statue }}</td>
+              <td>{{ item.totalStage }}</td>
+              <td>{{ item.currentStage }}</td>
+              <td>{{ item.num }}</td>
+              <td>{{ item.drugName }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </el-dialog>
     </template>
@@ -306,6 +332,7 @@ export default {
       contentTxt: '',
       dialogFormVisible: false,
       dialogFormVisible1: false,
+      printDialogVisible: false,
       readonly: true,
       currentPage: 1,
       pageSize: 5,
@@ -347,27 +374,10 @@ export default {
   methods: {
     handleSelectionChange (val) {
       this.multipleSelection = val
+      console.log(val)
     },
     showPrintData (multipleSelection) {
-      var arr = multipleSelection
-      let presIds = []
-      for (var i = 0; i < arr.length; i++) {
-        presIds.push(arr[i].id)
-      }
-      this.$axios.post('query/prescription_query/querySelected', {
-        presIds: presIds
-      })
-        .then(res => {
-          this.contentTxt = res.body.text
-          this.dialogFormVisible1 = true
-        })
-        .catch(failResponse => {
-          this.loading = false
-          this.$message.error('无法连接服务器')
-        })
-    },
-    printData () {
-      this.$print(this.$refs.print)
+      this.printDialogVisible = true
     },
     handleReturnAllPres (multipleSelection) {
       this.$confirm('此操作将永久删除该处方单，是否继续', '提示', {
@@ -464,7 +474,7 @@ export default {
       this.$axios.post('/query/prescription_query/queryAll')
         .then(res => {
           this.loading = false
-          _this.$store.commit('repertory', res.data.prescriptions)
+          _this.$store.commit('prescription', res.data.prescriptions)
           allData = res.data.prescriptions
           _this.tableData = res.data.prescriptions
           _this.total = this.tableData.length
@@ -665,25 +675,51 @@ export default {
           this.loading = false
           this.$message.error('服务器被干掉了！')
         })
-    },
-    computed: {
-      prescriptions () {
-        return this.$store.state.prescriptions
-      }
-    },
-    created () {
-      if (sessionStorage.getItem('prescription')) {
-        allData = this.$store.state.prescription
-        this.tableData = this.$store.state.prescription
-        this.total = this.tableData.prescription
-        this.tableChange()
-      }
     }
     // activated () {
     //   this.queryAll()
     // }
+  },
+  computed: {
+    prescriptions () {
+      return this.$store.state.prescriptions
+    },
+    getDate () {
+      return this.getNowFormatDate()
+    }
+  },
+  created () {
+    if (sessionStorage.getItem('prescription')) {
+      allData = this.$store.state.prescription
+      this.tableData = this.$store.state.prescription
+      this.total = this.tableData.prescription
+      this.tableChange()
+    }
   }
 }
 </script>
 <style>
+  #printTest table{
+    font-family:"宋体";
+    border-collapse:collapse;
+    width:99.5%;
+  }
+  #printTest table thead th{
+    height: 40px;
+    font-size: 13px;
+    /* width: 10px; */
+    text-align: center;
+    border: 1px solid black;
+  }
+  #printTest table tbody tr{
+    font-size:13px;
+    border: 1px solid black;
+    height: 40px;
+    text-align: center;
+  }
+  #printTest table tbody td{
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid black;
+  }
 </style>
