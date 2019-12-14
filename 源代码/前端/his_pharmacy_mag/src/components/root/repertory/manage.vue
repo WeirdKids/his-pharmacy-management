@@ -10,7 +10,6 @@
       size="mini">
       <el-form-item>
         <el-button
-          style="margin-right: 100%"
           type="primary"
           round
           :loading="loading"
@@ -67,13 +66,22 @@
           :disabled="this.multipleSelection.length === 0">批量修改
         </el-button>
       </el-form-item>
+    </el-form>
+    <el-form
+      :inline="true"
+      size="mini">
       <el-form-item>
+        <input name="upload"
+               ref="pathClear"
+               type="file"
+               @change="getFile(this)"
+               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
         <el-button
           type="primary"
           round
+          :loading="fileUploadBtnText === '正在导入'"
           icon="el-icon-download"
-          @click="handleImport">
-          导入药品数据
+          @click.native.prevent="importFile()"> {{ fileUploadBtnText }}
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -81,7 +89,7 @@
           type="primary"
           round
           icon="el-icon-upload2"
-          @click.native.prevent="export2Excel(tableData,multipleSelection)">导出处方单信息
+          @click.native.prevent="export2Excel(tableData,multipleSelection)">导出药品信息
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -109,7 +117,7 @@
         :row-style="{height: 90 + 'px'}"
         tooltip-effect="dark"
         height="520"
-        style="width: 100%; margin-bottom: 10px; margin-top: 5px;"
+        style="width: 100%; margin-bottom: 10px; margin-top: -10px;"
         :row-key="getRowKeys"
         @selection-change="handleSelectionChange">
         <el-table-column
@@ -405,6 +413,7 @@
 import echarts from 'echarts'
 let allData
 let saveWarehouse
+let outDatas
 export default {
   name: 'manage',
   data () {
@@ -463,11 +472,11 @@ export default {
       dialogFormVisible2: false,
       printDialogVisible: false,
       readonly: true,
+      fileUploadBtnText: '导入药品信息',
       formLabelWidth: '220px',
       form: {
       },
       form1: {
-
       },
       options: [
         {
@@ -867,7 +876,79 @@ export default {
         })
       })
     },
-    handleImport () {
+    getFile (obj) {
+      // eslint-disable-next-line no-unused-vars
+      let _this = this
+      // eslint-disable-next-line no-unused-vars
+      let inputDOM = this.$refs.inputer// 通过DOM取文件数据
+      this.file = event.currentTarget.files[0]
+      var rABS = false // 是否将文件读取为二进制字符串
+      var f = this.file
+      var reader = new FileReader()
+      // (!FileReader.prototype.readAsBinaryString) {
+      FileReader.prototype.readAsBinaryString = function (f) {
+        var binary = ''
+        var rABS = false // 是否将文件读取为二进制字符串
+        // eslint-disable-next-line no-unused-vars
+        var pt = this
+        var wb // 读取完成的数据
+        var outdata
+        var reader = new FileReader()
+        reader.onload = function (e) {
+          var bytes = new Uint8Array(reader.result)
+          var length = bytes.byteLength
+          for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i])
+          }
+          var XLSX = require('xlsx')
+          if (rABS) {
+            wb = XLSX.read(btoa(binary), {// 手动转化
+              type: 'base64'
+            })
+          } else {
+            wb = XLSX.read(binary, {
+              type: 'binary'
+            })
+          }
+          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])// outdata就是你想要的东
+          outDatas = outdata
+          console.log(outDatas)
+        }
+        reader.readAsArrayBuffer(f)
+      }
+      if (rABS) {
+        reader.readAsArrayBuffer(f)
+      } else {
+        reader.readAsBinaryString(f)
+      }
+    },
+    importFile () {
+      if (!outDatas) {
+        this.$message({type: 'warning', message: '没有可上传的文件'})
+      } else {
+        this.fileUploadBtnText = '正在导入'
+        this.$axios.post('/importDrugs', {
+          drugs: outDatas
+        }).then(res => {
+          this.$store.commit('repertory', res.data)
+          allData = res.data
+          this.tableData = res.data
+          this.total = this.tableData.length
+          // allData.splice(index, 1)
+          // this.tableData = allData
+          // this.total = allData.length
+          this.tableChange()
+          this.fileUploadBtnText = '导入药品信息'
+          this.$message({type: 'success', message: '上传成功'})
+        }).catch(() => {
+          this.$message({type: 'error', message: '操作失败'})
+          this.fileUploadBtnText = '导入药品信息'
+        })
+        // 清空 outDatas
+        outDatas = ''
+        // 清空导航栏里的信息
+        this.$refs.pathClear.value = ''
+      }
     },
     export2Excel (tableData, multipleSelection) {
       let tableDatas = []

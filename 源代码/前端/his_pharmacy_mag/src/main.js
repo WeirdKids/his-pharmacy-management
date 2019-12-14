@@ -10,6 +10,7 @@ import qs from 'qs'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Print from 'vue-print-nb'
+import XLSX from 'xlsx'
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8088/api
 var axios = require('axios')
@@ -21,6 +22,7 @@ Vue.prototype.$qs = qs
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Print)
+Vue.use(XLSX)
 
 // 获取当前时间
 Vue.prototype.getNowFormatDate = function () {

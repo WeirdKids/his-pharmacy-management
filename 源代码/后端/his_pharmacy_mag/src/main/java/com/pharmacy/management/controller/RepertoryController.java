@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -160,6 +163,42 @@ public class RepertoryController {
         List<Drug> drugs = new ArrayList<>();
         drugs = getDrugs(mnemonicCode);
         return new RepertoryResult(200, "批量删除完成", drugs);
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/api/importDrugs")
+    @ResponseBody
+    public List<Drug> importDrugs(@RequestBody Map map) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(map.get("drugs"));
+        List<Map> list = new ArrayList<>();
+        List<Drug> drugs = new ArrayList<>();
+        Drug drug = new Drug();
+        list = (List<Map>) map.get("drugs");
+        for (Map m : list) {
+            drug = new Drug();
+            drug.setDrugsCode(m.get("drugsCode").toString());
+            drug.setDrugsName(m.get("drugsName").toString());
+            drug.setDrugsFormat(m.get("drugsFormat").toString());
+            drug.setDrugsUnit(m.get("drugsUnit").toString());
+            drug.setManufacturer(m.get("manufacturer").toString());
+            drug.setDrugsDosageID((Integer) m.get("drugsDosageID"));
+            drug.setDrugsTypeID((Integer) m.get("drugsTypeID"));
+            drug.setDrugsPrice(Double.valueOf(m.get("drugsPrice").toString()));
+            drug.setMnemonicCode(m.get("mnemonicCode").toString());
+            drug.setCreationDate(format.parse(m.get("creationDate").toString()));
+            drug.setTotalNum((Integer) m.get("totalNum"));
+            drug.setSaveRequire(m.get("saveRequire").toString());
+            List<Warehouse> warehouses = drug.getWarehouses();
+            Warehouse warehouse = new Warehouse();
+            warehouse.setWarehouse("储藏室");
+            warehouse.setNum(drug.getTotalNum());
+            warehouse.setDrug(drug);
+            warehouses.add(warehouse);
+            drugDao.save(drug);
+            drugs.add(drug);
+        }
+        return drugs;
     }
 
     private List<Drug> getDrugs(String mnemonicCode) {

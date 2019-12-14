@@ -4,7 +4,7 @@
 <template>
   <div>
     <el-container class="home-container">
-      <el-header class="home-header">
+      <el-header class="home-header" style="height: 50px">
         <span class="home-title">门诊药房工作站</span>
         <div style="display: flex; align-items: center; margin-right: 7px">
           <el-dropdown @command="handleCommand">

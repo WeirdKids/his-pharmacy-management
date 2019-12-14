@@ -638,6 +638,7 @@ export default {
           }
           outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])// outdata就是你想要的东
           outDatas = outdata
+          console.log(outDatas)
         }
         reader.readAsArrayBuffer(f)
       }
@@ -649,7 +650,6 @@ export default {
     },
     updateByFile () {
       this.loading = true
-      console.log(outDatas.prescriptionCode)
       this.$axios.post('service/managePres/addPresByFile', {
         prescripitonCodes: outDatas.prescriptionCode,
         doctorIDs: outDatas.doctorID,
