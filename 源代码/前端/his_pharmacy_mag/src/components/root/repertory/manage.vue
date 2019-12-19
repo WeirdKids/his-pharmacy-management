@@ -554,7 +554,6 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
-      // console.log(val)
     },
     getRowKeys (row) {
       return row.id

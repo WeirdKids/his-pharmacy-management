@@ -23,7 +23,7 @@ public interface DrugDao extends JpaRepository<Drug, Integer> {
     Drug findAllById(int id);
     Drug findAllByDrugsName(String drugsName);
 
-    @Query(value = "select * from drugs limit 50", nativeQuery = true)
+    @Query(value = "select * from drugs", nativeQuery = true)
     List<Drug> returnAll();
     // 根据药品 id 实现单个删除
     void deleteById(int id);
@@ -35,6 +35,6 @@ public interface DrugDao extends JpaRepository<Drug, Integer> {
     @Query(value = "select distinct drugsTypeID from drugs", nativeQuery = true)
     List<String> getDrugsTypeId();
 
-    @Query(value = "select drugsName from drugs where drugsTypeID = :drugsTypeID limit 50", nativeQuery = true)
+    @Query(value = "select drugsName from drugs where drugsTypeID = :drugsTypeID", nativeQuery = true)
     List<String> getDrugsName(@Param("drugsTypeID") int drugsTypeID);
 }

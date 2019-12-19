@@ -80,13 +80,6 @@ public class RepertoryController {
         drug.setTotalNum(totalNum);
         List<Warehouse> warehouses = drug.getWarehouses();
         List<Warehouse> warehouses1 = requestDrug.getWarehouses();
-        while (warehouses.size() != 2) {
-            Warehouse warehouse = new Warehouse();
-            warehouse.setDrug(drug);
-            warehouse.setNum(0);
-            warehouse.setWarehouse("0");
-            warehouses.add(warehouse);
-        }
         if (warehouses.get(0).getWarehouse() == warehouses1.get(0).getWarehouse()) {
             warehouses.get(0).setNum(warehouses1.get(0).getNum());
             warehouses.get(1).setWarehouse(warehouses1.get(1).getWarehouse());
@@ -96,11 +89,6 @@ public class RepertoryController {
             warehouses.get(0).setNum(warehouses1.get(1).getNum());
             warehouses.get(1).setWarehouse(warehouses1.get(0).getWarehouse());
             warehouses.get(1).setNum(warehouses1.get(0).getNum());
-        }
-        for (int i = warehouses.size(); i > 0; i --) {
-            if (warehouses.get(i - 1).getNum() == 0) {
-                warehouses.remove(i - 1);
-            }
         }
         drugDao.save(drug);
         List<Drug> drugs = getDrugs(mnemonicCode);
@@ -122,15 +110,12 @@ public class RepertoryController {
         for (int id : ids) {
             Drug drug = new Drug();
             drug = drugService.getById(id);
-            int size = drug.getWarehouses().size();
-            if (size == 0) {
-                continue;
-            } else if (size == 1) {
-                drug.getWarehouses().get(0).setWarehouse(warehouse);
-            } else {
+            if (drug.getWarehouses().get(0).equals(warehouse)) {
                 drug.getWarehouses().get(0).setNum(drug.getWarehouses().get(0).getNum() + drug.getWarehouses().get(1).getNum());
-                drug.getWarehouses().remove(1);
-                drug.getWarehouses().get(0).setWarehouse(warehouse);
+                drug.getWarehouses().get(1).setNum(0);
+            } else {
+                drug.getWarehouses().get(1).setNum(drug.getWarehouses().get(0).getNum() + drug.getWarehouses().get(1).getNum());
+                drug.getWarehouses().get(0).setNum(0);
             }
             drugDao.save(drug);
         }

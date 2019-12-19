@@ -32,19 +32,19 @@
               icon="el-icon-search">查询
             </el-button>
           </el-form-item>
-          <el-form-item>
-            <input name="upload"
-                   type="file"
-                   @change="importfile(this)"
-                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-            <el-button
-              type="primary"
-              round
-              :loading="loading"
-              icon="el-icon-download"
-              @click.native.prevent="updateByFile()">导入处方单信息
-            </el-button>
-          </el-form-item>
+<!--          <el-form-item>-->
+<!--            <input name="upload"-->
+<!--                   type="file"-->
+<!--                   @change="importfile(this)"-->
+<!--                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />-->
+<!--            <el-button-->
+<!--              type="primary"-->
+<!--              round-->
+<!--              :loading="loading"-->
+<!--              icon="el-icon-download"-->
+<!--              @click.native.prevent="updateByFile()">导入处方单信息-->
+<!--            </el-button>-->
+<!--          </el-form-item>-->
         </el-col>
         <el-col :span="10">
           <el-form-item>
@@ -316,7 +316,7 @@ export default {
         return callback(new Error('输入不能为空'))
       }
       setTimeout(() => {
-        const re = /^(0|[1-9][0-9]*)$/
+        const re = /^([1-9][0-9]*)$/
         const reCheck = re.test(value)
         if (!reCheck) {
           return callback(new Error('请输入正整数'))
@@ -543,7 +543,7 @@ export default {
               this.loading = false
               this.$message.error('服务器被干掉了！')
             })
-        }
+        } else (this.$message.error('数据验证不合法！'))
       })
     },
     handleReturn (index, row) {
